@@ -11,5 +11,6 @@ struct ProjectPulseApp: App {
                 .environmentObject(appState)
                 .environmentObject(dashboardController)
         }
+        .menuBarExtraStyle(.window)
     }
 }

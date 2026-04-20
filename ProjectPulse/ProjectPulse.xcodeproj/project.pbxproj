@@ -8,13 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		0FAADFB4F55AFF465FF51B1A /* DashboardWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF7771C55BC5F5135D99161 /* DashboardWindowController.swift */; };
+		4AF56999272F8744CEA5F599 /* AppUsageTotal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DEC23F470E23EC334B4DCA /* AppUsageTotal.swift */; };
+		4BEC181F6289095637E5DEAC /* DaySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFFBD939A04D01B35073DAD /* DaySummary.swift */; };
+		5CF8A98567B28D1322677C59 /* TrackedSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618A2AE0BC64B37BA92EC7AF /* TrackedSession.swift */; };
+		6468F1770C8189667C37AC67 /* WorkDayRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A961CDB991367A8057AC8FA /* WorkDayRecord.swift */; };
 		691706696F4A3792515AFDA0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E3BEB19EDD87745BC800DB /* SettingsView.swift */; };
 		6DA4771CC2CC17BF14FE5AF3 /* ActiveAppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7378423B970479AB052611E1 /* ActiveAppMonitor.swift */; };
 		6EB7A8C4205206308C4ABD14 /* ActivityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F639D0681AD2B520367EB4 /* ActivityEvent.swift */; };
 		6EEE78AA9F3C36D9A450C23E /* ActivitySegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B72B9CE378D8CD1C86CDAC /* ActivitySegment.swift */; };
 		7102A0085A32F950DE67CCA8 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8512335745D8D2F2FEFC248 /* MenuBarView.swift */; };
+		8515424B2D2F856FED792711 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CEE6081BAF667A155EFD /* IdleMonitor.swift */; };
 		933968A87A0DA86100161EF7 /* ActivitySegmentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC355DE02B5213227D5E5F7 /* ActivitySegmentBuilder.swift */; };
 		A28A690B1100CFD469C0D146 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59A8C42552D32DFEB3A557F /* AppState.swift */; };
+		A51E42837CE8DB33556E9949 /* DurationTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3C28256DD46C8901E7E3 /* DurationTextFormatter.swift */; };
 		E5182D70D89E0B89F54399F0 /* ProjectPulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D68766BC26C4C27242CCC6 /* ProjectPulseApp.swift */; };
 		E62A68463094FBD46C43B928 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78BF7B8EB01C95EC77D478B /* DashboardView.swift */; };
 		EC4B9EBA91A2FCE46EE672E6 /* ActivityEventBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3CACB35C98D22932B6757C /* ActivityEventBuffer.swift */; };
@@ -24,9 +30,14 @@
 /* Begin PBXFileReference section */
 		05B2097738385308EFF69005 /* ProjectPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectPulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09F639D0681AD2B520367EB4 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
+		25DEC23F470E23EC334B4DCA /* AppUsageTotal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTotal.swift; sourceTree = "<group>"; };
 		2B3CACB35C98D22932B6757C /* ActivityEventBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEventBuffer.swift; sourceTree = "<group>"; };
+		3A961CDB991367A8057AC8FA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
 		48CC8ED89EDE4C89A9A3F3F5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		49063E2250E8FB3A382643FA /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		618A2AE0BC64B37BA92EC7AF /* TrackedSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedSession.swift; sourceTree = "<group>"; };
+		62AC3C28256DD46C8901E7E3 /* DurationTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTextFormatter.swift; sourceTree = "<group>"; };
+		6E30CEE6081BAF667A155EFD /* IdleMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleMonitor.swift; sourceTree = "<group>"; };
 		7378423B970479AB052611E1 /* ActiveAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMonitor.swift; sourceTree = "<group>"; };
 		87D68766BC26C4C27242CCC6 /* ProjectPulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPulseApp.swift; sourceTree = "<group>"; };
 		B6335B476F54AB1238AB6F60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -35,6 +46,7 @@
 		C8512335745D8D2F2FEFC248 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		CC220AFEAFC80B6664A57A74 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		D59A8C42552D32DFEB3A557F /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		DFFFBD939A04D01B35073DAD /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
 		E7E3BEB19EDD87745BC800DB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		EFF7771C55BC5F5135D99161 /* DashboardWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindowController.swift; sourceTree = "<group>"; };
 		F4B72B9CE378D8CD1C86CDAC /* ActivitySegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegment.swift; sourceTree = "<group>"; };
@@ -89,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				CC220AFEAFC80B6664A57A74 /* .gitkeep */,
+				62AC3C28256DD46C8901E7E3 /* DurationTextFormatter.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -130,6 +143,10 @@
 			children = (
 				09F639D0681AD2B520367EB4 /* ActivityEvent.swift */,
 				F4B72B9CE378D8CD1C86CDAC /* ActivitySegment.swift */,
+				25DEC23F470E23EC334B4DCA /* AppUsageTotal.swift */,
+				DFFFBD939A04D01B35073DAD /* DaySummary.swift */,
+				618A2AE0BC64B37BA92EC7AF /* TrackedSession.swift */,
+				3A961CDB991367A8057AC8FA /* WorkDayRecord.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -155,6 +172,7 @@
 			children = (
 				7378423B970479AB052611E1 /* ActiveAppMonitor.swift */,
 				2B3CACB35C98D22932B6757C /* ActivityEventBuffer.swift */,
+				6E30CEE6081BAF667A155EFD /* IdleMonitor.swift */,
 			);
 			path = Tracking;
 			sourceTree = "<group>";
@@ -231,12 +249,18 @@
 				6EEE78AA9F3C36D9A450C23E /* ActivitySegment.swift in Sources */,
 				933968A87A0DA86100161EF7 /* ActivitySegmentBuilder.swift in Sources */,
 				A28A690B1100CFD469C0D146 /* AppState.swift in Sources */,
+				4AF56999272F8744CEA5F599 /* AppUsageTotal.swift in Sources */,
 				E62A68463094FBD46C43B928 /* DashboardView.swift in Sources */,
 				0FAADFB4F55AFF465FF51B1A /* DashboardWindowController.swift in Sources */,
+				4BEC181F6289095637E5DEAC /* DaySummary.swift in Sources */,
+				A51E42837CE8DB33556E9949 /* DurationTextFormatter.swift in Sources */,
+				8515424B2D2F856FED792711 /* IdleMonitor.swift in Sources */,
 				7102A0085A32F950DE67CCA8 /* MenuBarView.swift in Sources */,
 				F23AA924F25F73462EE1A02E /* OnboardingView.swift in Sources */,
 				E5182D70D89E0B89F54399F0 /* ProjectPulseApp.swift in Sources */,
 				691706696F4A3792515AFDA0 /* SettingsView.swift in Sources */,
+				5CF8A98567B28D1322677C59 /* TrackedSession.swift in Sources */,
+				6468F1770C8189667C37AC67 /* WorkDayRecord.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
