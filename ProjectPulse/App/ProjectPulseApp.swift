@@ -13,7 +13,7 @@ struct ProjectPulseApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("Veira", systemImage: "circle.fill") {
+        MenuBarExtra("Veira", image: "MenuBarIcon") {
             MenuBarView()
                 .environmentObject(appState)
                 .environmentObject(dashboardController)
