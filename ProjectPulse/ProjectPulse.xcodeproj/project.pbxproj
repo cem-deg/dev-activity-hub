@@ -20,7 +20,6 @@
 		6EB7A8C4205206308C4ABD14 /* ActivityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F639D0681AD2B520367EB4 /* ActivityEvent.swift */; };
 		6EEE78AA9F3C36D9A450C23E /* ActivitySegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B72B9CE378D8CD1C86CDAC /* ActivitySegment.swift */; };
 		7102A0085A32F950DE67CCA8 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8512335745D8D2F2FEFC248 /* MenuBarView.swift */; };
-		7CB621032FA01D3700BE40F0 /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7CB621022FA01D2A00BE40F0 /* appcast.xml */; };
 		8515424B2D2F856FED792711 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E30CEE6081BAF667A155EFD /* IdleMonitor.swift */; };
 		933968A87A0DA86100161EF7 /* ActivitySegmentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC355DE02B5213227D5E5F7 /* ActivitySegmentBuilder.swift */; };
 		A28A690B1100CFD469C0D146 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59A8C42552D32DFEB3A557F /* AppState.swift */; };
@@ -34,7 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		05B2097738385308EFF69005 /* ProjectPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ProjectPulse.app; path = Veira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05B2097738385308EFF69005 /* ProjectPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectPulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09F639D0681AD2B520367EB4 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
 		1799D75EA8FD8AA51E9B0F56 /* ActivityNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityNotifier.swift; sourceTree = "<group>"; };
 		1CD360C937F41F6A7A805921 /* Veira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veira.entitlements; sourceTree = "<group>"; };
@@ -42,13 +41,12 @@
 		2B3CACB35C98D22932B6757C /* ActivityEventBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEventBuffer.swift; sourceTree = "<group>"; };
 		3A961CDB991367A8057AC8FA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
 		48CC8ED89EDE4C89A9A3F3F5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		49063E2250E8FB3A382643FA /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		49063E2250E8FB3A382643FA /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		5BDEEB93E85DB14394FEB49C /* UpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterService.swift; sourceTree = "<group>"; };
 		618A2AE0BC64B37BA92EC7AF /* TrackedSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedSession.swift; sourceTree = "<group>"; };
 		62AC3C28256DD46C8901E7E3 /* DurationTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTextFormatter.swift; sourceTree = "<group>"; };
 		6E30CEE6081BAF667A155EFD /* IdleMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleMonitor.swift; sourceTree = "<group>"; };
 		7378423B970479AB052611E1 /* ActiveAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMonitor.swift; sourceTree = "<group>"; };
-		7CB621022FA01D2A00BE40F0 /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		8730479418AC6808CF1BE5A4 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		87D68766BC26C4C27242CCC6 /* ProjectPulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPulseApp.swift; sourceTree = "<group>"; };
 		B6335B476F54AB1238AB6F60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -56,7 +54,7 @@
 		BEC355DE02B5213227D5E5F7 /* ActivitySegmentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegmentBuilder.swift; sourceTree = "<group>"; };
 		C78BF7B8EB01C95EC77D478B /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		C8512335745D8D2F2FEFC248 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
-		CC220AFEAFC80B6664A57A74 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		CC220AFEAFC80B6664A57A74 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		D59A8C42552D32DFEB3A557F /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DFFFBD939A04D01B35073DAD /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
 		E7E3BEB19EDD87745BC800DB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -167,7 +165,6 @@
 		A5CCE979DAFEF5D09297E42A = {
 			isa = PBXGroup;
 			children = (
-				7CB621022FA01D2A00BE40F0 /* appcast.xml */,
 				34BF79F99889944AFAA8836B /* App */,
 				8C8D1087F767F72A0B0028B2 /* Domain */,
 				7A3DE4773E19292D365E9B92 /* Features */,
@@ -302,7 +299,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CB621032FA01D3700BE40F0 /* appcast.xml in Resources */,
 				0C316CC7C8A7632582A7DBD0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,7 +371,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -388,7 +384,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -453,7 +449,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -472,7 +468,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

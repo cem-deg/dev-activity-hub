@@ -33,6 +33,6 @@
 	<key>SUPublicEDKey</key>
 	<string>3Lnhyhfd/OxOl0kh+mi8XtSVD0IoAi50V8+uaTwgzdc=</string>
 	<key>SUEnableAutomaticChecks</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
