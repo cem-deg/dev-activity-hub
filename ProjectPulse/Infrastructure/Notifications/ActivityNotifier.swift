@@ -6,6 +6,21 @@ enum ActivityNotifier {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
+    static func notifyUpdateAvailable(version: String?) {
+        let id = "com.veira.update-available"
+        let center = UNUserNotificationCenter.current()
+        center.removeDeliveredNotifications(withIdentifiers: [id])
+
+        let content = UNMutableNotificationContent()
+        content.title = "Veira update available"
+        content.body = version.map { "Version \($0) is ready to install." }
+            ?? "A new version is ready to install."
+        content.sound = .default
+
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: nil)
+        center.add(request)
+    }
+
     static func notifyInactivityPause() {
         let id = "com.veira.inactivity-pause"
         let center = UNUserNotificationCenter.current()

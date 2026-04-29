@@ -1,0 +1,51 @@
+project.yml
+
+MARKETING_VERSION: "1.2.0"
+CURRENT_PROJECT_VERSION: "3"
+
+cd ProjectPulse
+xcodegen generate
+
+Xcode
+Product → Archive → Export .app
+
+create-dmg \
+  --volname "Veira" \
+  --window-size 600 400 \
+  --icon-size 120 \
+  --icon "Veira.app" 150 200 \
+  --app-drop-link 450 200 \
+  "Veira.dmg" \
+  "Veira.app"
+
+  find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -type f | head -1
+
+  "ÇIKAN_PATH_BURAYA" Veira.dmg
+
+  Çıkan sparkle:edSignature="..." ve length="..." değerlerini sakla.
+
+GitHub Release
+
+* Tag: v1.2.0
+* Title: Veira v1.2.0
+* Asset: Veira.dmg
+
+appcast.xml içine yeni item ekle
+
+appcast.xml içine yeni item ekle
+
+<item>
+  <title>Veira 1.2.0</title>
+  <sparkle:version>3</sparkle:version>
+  <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+  <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+  <enclosure
+    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.2.0/Veira.dmg"
+    sparkle:edSignature="BURAYA_SIGNATURE"
+    length="BURAYA_LENGTH"
+    type="application/octet-stream"/>
+</item>
+
+git add appcast.xml ProjectPulse/project.yml
+git commit -m "release v1.2.0"
+git push

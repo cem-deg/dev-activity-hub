@@ -3,10 +3,14 @@ import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var updaterService: UpdaterService
     @State private var isShowingWeeklyDetails = false
+    @State private var isShowingSettings = false
 
     var body: some View {
-        if isShowingWeeklyDetails {
+        if isShowingSettings {
+            SettingsView(onBack: { isShowingSettings = false })
+        } else if isShowingWeeklyDetails {
             WeeklyDetailsView(isShowing: $isShowingWeeklyDetails)
                 .environmentObject(appState)
         } else {
@@ -17,6 +21,28 @@ struct DashboardView: View {
     private var mainDashboard: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                HStack {
+                    Spacer()
+                    Button {
+                        isShowingSettings = true
+                    } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: "gear")
+                                .font(.caption)
+                            Text("Settings")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(.secondary.opacity(0.10))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
                 SessionStatusCard()
                 TodaySummarySection()
                 AppBreakdownSection()
@@ -1243,6 +1269,168 @@ private struct HeatmapTile: View {
             case .active: onHover(true)
             case .ended: onHover(false)
             }
+        }
+    }
+}
+
+// MARK: - Settings View
+
+private struct SettingsView: View {
+    @EnvironmentObject private var updaterService: UpdaterService
+    @StateObject private var launchAtLogin = LaunchAtLoginService()
+
+    let onBack: () -> Void
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 28) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Button(action: onBack) {
+                        HStack(spacing: 5) {
+                            Image(systemName: "chevron.left")
+                                .font(.subheadline)
+                            Text("Back")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundStyle(.primary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(.secondary.opacity(0.10))
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    Text("Settings")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.top, 4)
+                    Text("Manage preferences, updates, and privacy.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                // Preferences
+                SettingsSection(title: "Preferences") {
+                    HStack {
+                        Text("Launch at Login")
+                            .font(.subheadline)
+                        Spacer()
+                        Toggle("", isOn: Binding(
+                            get: { launchAtLogin.isEnabled },
+                            set: { _ in launchAtLogin.toggle() }
+                        ))
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                    }
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                }
+
+                // Updates
+                SettingsSection(title: "Updates") {
+                    Button {
+                        updaterService.checkForUpdates()
+                    } label: {
+                        Group {
+                            if updaterService.isUpdateAvailable {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Update Available")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.primary)
+                                        if let version = updaterService.latestVersion {
+                                            Text("Version \(version)")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    Spacer()
+                                    Text("Update Now")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(Color.accentColor)
+                                }
+                            } else {
+                                HStack {
+                                    Text("Check for Updates…")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.primary)
+                                    Spacer()
+                                    Image(systemName: "arrow.clockwise")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .padding(12)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                        .contentShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!updaterService.canCheckForUpdates)
+                    .opacity(updaterService.canCheckForUpdates ? 1.0 : 0.45)
+                }
+
+                // About
+                SettingsSection(title: "About") {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Veira")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+                               let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                                Text("Version \(version) (\(build))")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .monospacedDigit()
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                }
+
+                // Privacy
+                SettingsSection(title: "Privacy") {
+                    Text("All activity data is stored locally on your Mac. No screenshots, keystrokes, or clipboard content are ever captured. Nothing is sent to any server.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.06)))
+                }
+            }
+            .padding(32)
+        }
+        .frame(minWidth: 640, minHeight: 480)
+    }
+}
+
+private struct SettingsSection<Content: View>: View {
+    let title: String
+    @ViewBuilder let content: Content
+
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(.tertiary)
+                .textCase(.uppercase)
+                .tracking(0.5)
+            content
         }
     }
 }

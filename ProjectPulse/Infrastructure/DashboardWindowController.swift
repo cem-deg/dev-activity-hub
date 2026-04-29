@@ -4,7 +4,7 @@ import SwiftUI
 final class DashboardWindowController: NSObject, ObservableObject, NSWindowDelegate {
     private var window: NSWindow?
 
-    func open(appState: AppState) {
+    func open(appState: AppState, updaterService: UpdaterService) {
         NSApplication.shared.activate(ignoringOtherApps: true)
 
         if let existing = window {
@@ -21,7 +21,9 @@ final class DashboardWindowController: NSObject, ObservableObject, NSWindowDeleg
         newWindow.title = "Dashboard — Veira"
         newWindow.center()
         newWindow.contentView = NSHostingView(
-            rootView: DashboardView().environmentObject(appState)
+            rootView: DashboardView()
+                .environmentObject(appState)
+                .environmentObject(updaterService)
         )
         newWindow.delegate = self
         newWindow.makeKeyAndOrderFront(nil)

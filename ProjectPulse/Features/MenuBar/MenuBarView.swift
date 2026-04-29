@@ -134,12 +134,8 @@ struct MenuBarView: View {
     private var actionsSection: some View {
         VStack(spacing: 0) {
             PanelButton("Open Dashboard") {
-                dashboardController.open(appState: appState)
+                dashboardController.open(appState: appState, updaterService: updaterService)
             }
-            PanelButton("Check for Updates…") {
-                updaterService.checkForUpdates()
-            }
-            .disabled(!updaterService.canCheckForUpdates)
             PanelButton("Quit Veira") {
                 NSApplication.shared.terminate(nil)
             }
