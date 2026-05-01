@@ -43,7 +43,17 @@ struct DashboardView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                SessionStatusCard()
+                VStack(alignment: .leading, spacing: 8) {
+                    let streak = appState.currentStreakDays
+                    Text(streak > 0 ? "\(streak) Day Streak 🔥" : "Start your streak today")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(streak > 0 ? .primary : .secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Capsule().fill(.secondary.opacity(0.10)))
+                    SessionStatusCard()
+                }
                 TodaySummarySection()
                 AppBreakdownSection()
                 WeeklySummarySection(isShowingWeeklyDetails: $isShowingWeeklyDetails)
@@ -52,6 +62,7 @@ struct DashboardView: View {
         }
         .frame(minWidth: 640, minHeight: 480)
     }
+
 }
 
 // MARK: - Today Summary
@@ -253,16 +264,103 @@ private struct SessionStatusCard: View {
                 Circle()
                     .fill(appState.sessionState.indicatorColor)
                     .frame(width: 8, height: 8)
-                Text(appState.sessionState.statusLabel)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(appState.sessionState.statusLabel)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    if let duration = sessionDurationText {
+                        Text(duration)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .monospacedDigit()
+                    }
+                }
+                Spacer()
+                sessionControls
             }
             .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(.secondary.opacity(0.12))
             )
+        }
+    }
+
+    private var sessionDurationText: String? {
+        switch appState.sessionState {
+        case .idle:
+            return nil
+        case .active:
+            let elapsed = appState.sessionActiveRunStartedAt.map {
+                appState.liveClockTick.timeIntervalSince($0)
+            } ?? 0
+            return DurationTextFormatter.string(from: appState.sessionAccumulatedDuration + elapsed)
+        case .paused, .pausedDueToInactivity:
+            return DurationTextFormatter.string(from: appState.sessionAccumulatedDuration)
+        }
+    }
+
+    @ViewBuilder
+    private var sessionControls: some View {
+        switch appState.sessionState {
+        case .idle:
+            Button { appState.startSession() } label: {
+                Text("Start")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+            }
+            .buttonStyle(.plain)
+        case .active:
+            HStack(spacing: 6) {
+                Button { appState.pauseSession() } label: {
+                    Text("Pause")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.primary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.15)))
+                }
+                .buttonStyle(.plain)
+                Button { appState.endSession() } label: {
+                    Text("End")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.08)))
+                }
+                .buttonStyle(.plain)
+            }
+        case .paused, .pausedDueToInactivity:
+            HStack(spacing: 6) {
+                Button { appState.resumeSession() } label: {
+                    Text("Resume")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+                }
+                .buttonStyle(.plain)
+                Button { appState.endSession() } label: {
+                    Text("End")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.08)))
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 }
@@ -1278,6 +1376,8 @@ private struct HeatmapTile: View {
 private struct SettingsView: View {
     @EnvironmentObject private var updaterService: UpdaterService
     @StateObject private var launchAtLogin = LaunchAtLoginService()
+    @AppStorage("com.veira.idleReminderMinutes") private var idleReminderMinutes: Int = 10
+    @AppStorage("com.veira.pauseReminderMinutes") private var pauseReminderMinutes: Int = 5
 
     let onBack: () -> Void
 
@@ -1328,6 +1428,41 @@ private struct SettingsView: View {
                     }
                     .padding(12)
                     .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                }
+
+                // Notifications
+                SettingsSection(title: "Notifications") {
+                    VStack(spacing: 8) {
+                        HStack {
+                            Text("Idle pause after")
+                                .font(.subheadline)
+                            Spacer()
+                            Picker("", selection: $idleReminderMinutes) {
+                                ForEach([1, 3, 5, 10], id: \.self) { minutes in
+                                    Text(minutes == 1 ? "1 minute" : "\(minutes) minutes").tag(minutes)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                        }
+                        .padding(12)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+
+                        HStack {
+                            Text("Paused reminder after")
+                                .font(.subheadline)
+                            Spacer()
+                            Picker("", selection: $pauseReminderMinutes) {
+                                ForEach([1, 3, 5, 10], id: \.self) { minutes in
+                                    Text(minutes == 1 ? "1 minute" : "\(minutes) minutes").tag(minutes)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                        }
+                        .padding(12)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                    }
                 }
 
                 // Updates

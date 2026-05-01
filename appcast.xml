@@ -34,6 +34,17 @@
     sparkle:edSignature="g9sklJCSLS2K4hQpA6FYqIGxVQN40PhMuuQKVSTwEaGrhRFDvBHcch6BP1X7Ram66Dro5TXuf2s/wTbR/ZcZBA=="
     length="1836792"
     type="application/octet-stream"/>
+        <item>
+      <title>Veira 1.3.0</title>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.3.0/Veira.dmg"
+        sparkle:edSignature="Esmv44fu3ecsjtR56IcIUljc8SXm1o0uOCZrU8ibtIMe7e9lQ+01hcI/rHZa6YvBri0yivdEKN35sR9kLVxyDQ=="
+        length="1872286"
+        type="application/octet-stream"/>
+    </item>
 </item>
   </channel>
 </rss>

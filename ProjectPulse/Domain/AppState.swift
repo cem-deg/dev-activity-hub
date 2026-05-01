@@ -35,7 +35,7 @@ final class AppState: ObservableObject {
     private let monitor = ActiveAppMonitor()
     private let buffer = ActivityEventBuffer()
     private let segmentBuilder = ActivitySegmentBuilder()
-    private let idleMonitor = IdleMonitor(threshold: 60)
+    private let idleMonitor = IdleMonitor(threshold: 600)
 
     // Finalization boundary — unchanged across pause/resume cycles
     private var sessionStartedAt: Date?
@@ -51,6 +51,10 @@ final class AppState: ObservableObject {
 
     @Published private(set) var liveClockTick: Date = Date()
     private var displayTimer: Timer?
+
+    private var pauseReminderTimer: Timer?
+    private var pauseStartedAt: Date?
+    private var pauseReminderFired = false
 
     @Published private var workDays: [WorkDayRecord] = SessionStore.load()
 
@@ -93,6 +97,29 @@ final class AppState: ObservableObject {
     var todayTotalDuration: TimeInterval {
         guard let record = todayRecord else { return 0 }
         return record.sessions.flatMap(\.segments).compactMap(\.duration).reduce(0, +)
+    }
+
+    var currentStreakDays: Int {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        func dayDuration(_ date: Date) -> TimeInterval {
+            workDays.first(where: { $0.date == date })
+                .map { $0.sessions.reduce(0.0) { $0 + $1.segmentDuration } } ?? 0
+        }
+
+        let startDay = dayDuration(today) > 0
+            ? today
+            : calendar.date(byAdding: .day, value: -1, to: today)!
+
+        var streak = 0
+        var day = startDay
+        while dayDuration(day) > 0 {
+            streak += 1
+            guard let previous = calendar.date(byAdding: .day, value: -1, to: day) else { break }
+            day = previous
+        }
+        return streak
     }
 
     var weeklyDaySummaries: [DaySummary] {
@@ -169,6 +196,7 @@ final class AppState: ObservableObject {
 
     func startSession() {
         guard sessionState == .idle else { return }
+        cancelPauseReminder()
         let now = Date()
         sessionStartedAt = now
         activeRunStartedAt = now
@@ -176,6 +204,7 @@ final class AppState: ObservableObject {
         sessionState = .active
         monitor.start()
         startDisplayTimer()
+        idleMonitor.threshold = idleThresholdSeconds
         idleMonitor.start()
     }
 
@@ -191,18 +220,22 @@ final class AppState: ObservableObject {
         segmentBuilder.closeCurrentSegment(at: now)
         stopDisplayTimer()
         idleMonitor.stop()
+        startPauseReminder()
     }
 
     func resumeSession() {
         guard sessionState == .paused || sessionState == .pausedDueToInactivity else { return }
+        cancelPauseReminder()
         activeRunStartedAt = Date()
         sessionState = .active
         monitor.start()
         startDisplayTimer()
+        idleMonitor.threshold = idleThresholdSeconds
         idleMonitor.start()
     }
 
     func endSession() {
+        cancelPauseReminder()
         let now = Date()
 
         switch sessionState {
@@ -245,6 +278,46 @@ final class AppState: ObservableObject {
         guard sessionState == .pausedDueToInactivity else { return }
         ActivityNotifier.notifyInactivityPause()
         idleMonitor.stop()
+    }
+
+    private var idleThresholdSeconds: TimeInterval {
+        let minutes = UserDefaults.standard.integer(forKey: "com.veira.idleReminderMinutes")
+        return TimeInterval((minutes > 0 ? minutes : 10) * 60)
+    }
+
+    private var pauseReminderThreshold: TimeInterval {
+        let minutes = UserDefaults.standard.integer(forKey: "com.veira.pauseReminderMinutes")
+        return TimeInterval((minutes > 0 ? minutes : 5) * 60)
+    }
+
+    private func startPauseReminder() {
+        pauseReminderFired = false
+        pauseStartedAt = Date()
+        let timer = Timer(timeInterval: 30, repeats: true) { [weak self] _ in
+            self?.checkPauseReminder()
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        pauseReminderTimer = timer
+    }
+
+    private func cancelPauseReminder() {
+        pauseReminderTimer?.invalidate()
+        pauseReminderTimer = nil
+        pauseStartedAt = nil
+        pauseReminderFired = false
+    }
+
+    private func checkPauseReminder() {
+        guard !pauseReminderFired, let startedAt = pauseStartedAt else { return }
+        guard idleMonitor.isUserActive else {
+            cancelPauseReminder()
+            return
+        }
+        guard Date().timeIntervalSince(startedAt) >= pauseReminderThreshold else { return }
+        pauseReminderFired = true
+        pauseReminderTimer?.invalidate()
+        pauseReminderTimer = nil
+        ActivityNotifier.notifyPausedButActive()
     }
 
     private func startDisplayTimer() {

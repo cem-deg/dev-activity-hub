@@ -5,12 +5,18 @@ final class IdleMonitor {
     var onIdleStarted: ((Date) -> Void)?
     var onIdleEnded: (() -> Void)?
 
-    private let threshold: TimeInterval
+    var threshold: TimeInterval
     private var pollTimer: Timer?
     private var isIdle = false
 
     init(threshold: TimeInterval = 180) {
         self.threshold = threshold
+    }
+
+    var isUserActive: Bool {
+        guard let anyInputEvent = CGEventType(rawValue: UInt32.max) else { return true }
+        let secondsIdle = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: anyInputEvent)
+        return secondsIdle < threshold
     }
 
     func start() {
