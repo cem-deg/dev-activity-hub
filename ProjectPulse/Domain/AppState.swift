@@ -33,8 +33,8 @@ final class AppState: ObservableObject {
     }()
 
     private let monitor = ActiveAppMonitor()
-    private let buffer = ActivityEventBuffer()
     private let segmentBuilder = ActivitySegmentBuilder()
+    private var currentSessionId: UUID?
     private let idleMonitor = IdleMonitor(threshold: 600)
 
     // Finalization boundary — unchanged across pause/resume cycles
@@ -51,6 +51,7 @@ final class AppState: ObservableObject {
 
     @Published private(set) var liveClockTick: Date = Date()
     private var displayTimer: Timer?
+    private var autosaveTimer: Timer?
 
     private var pauseReminderTimer: Timer?
     private var pauseStartedAt: Date?
@@ -60,7 +61,6 @@ final class AppState: ObservableObject {
 
     init() {
         monitor.onEvent = { [weak self] event in
-            self?.buffer.append(event)
             self?.segmentBuilder.handle(event)
             self?.openSegmentAppName = event.appName
             self?.openSegmentBundleId = event.bundleIdentifier
@@ -201,9 +201,11 @@ final class AppState: ObservableObject {
         sessionStartedAt = now
         activeRunStartedAt = now
         accumulatedSessionDuration = 0
+        currentSessionId = UUID()
         sessionState = .active
         monitor.start()
         startDisplayTimer()
+        startAutosaveTimer()
         idleMonitor.threshold = idleThresholdSeconds
         idleMonitor.start()
     }
@@ -219,6 +221,8 @@ final class AppState: ObservableObject {
         monitor.stop()
         segmentBuilder.closeCurrentSegment(at: now)
         stopDisplayTimer()
+        stopAutosaveTimer()
+        performAutosave()
         idleMonitor.stop()
         startPauseReminder()
     }
@@ -230,6 +234,7 @@ final class AppState: ObservableObject {
         sessionState = .active
         monitor.start()
         startDisplayTimer()
+        startAutosaveTimer()
         idleMonitor.threshold = idleThresholdSeconds
         idleMonitor.start()
     }
@@ -254,8 +259,8 @@ final class AppState: ObservableObject {
         }
 
         idleMonitor.stop()
+        stopAutosaveTimer()
         finalizeSession(endedAt: now)
-        buffer.clear()
         accumulatedSessionDuration = 0
         sessionState = .idle
     }
@@ -335,11 +340,52 @@ final class AppState: ObservableObject {
         displayTimer = nil
     }
 
+    private func startAutosaveTimer() {
+        stopAutosaveTimer()
+        let timer = Timer(timeInterval: 12, repeats: true) { [weak self] _ in
+            self?.performAutosave()
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        autosaveTimer = timer
+    }
+
+    private func stopAutosaveTimer() {
+        autosaveTimer?.invalidate()
+        autosaveTimer = nil
+    }
+
+    private func performAutosave() {
+        guard let startedAt = sessionStartedAt,
+              let sessionId = currentSessionId else { return }
+
+        let now = Date()
+        let partial = TrackedSession(
+            id: sessionId,
+            startedAt: startedAt,
+            endedAt: now,
+            segments: segmentBuilder.snapshotSegments(at: now)
+        )
+
+        let dayKey = Calendar.current.startOfDay(for: startedAt)
+        var snapshot = workDays
+        if let idx = snapshot.firstIndex(where: { $0.date == dayKey }) {
+            if let existing = snapshot[idx].sessions.firstIndex(where: { $0.id == sessionId }) {
+                snapshot[idx].sessions[existing] = partial
+            } else {
+                snapshot[idx].sessions.append(partial)
+            }
+        } else {
+            snapshot.append(WorkDayRecord(date: dayKey, sessions: [partial]))
+        }
+
+        SessionStore.saveAsync(snapshot)
+    }
+
     private func finalizeSession(endedAt: Date) {
         guard let startedAt = sessionStartedAt else { return }
 
         let session = TrackedSession(
-            id: UUID(),
+            id: currentSessionId ?? UUID(),
             startedAt: startedAt,
             endedAt: endedAt,
             segments: segmentBuilder.drainSegments()
@@ -353,6 +399,7 @@ final class AppState: ObservableObject {
         }
 
         sessionStartedAt = nil
-        SessionStore.save(workDays)
+        currentSessionId = nil
+        SessionStore.saveAsync(workDays)
     }
 }

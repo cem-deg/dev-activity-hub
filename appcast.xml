@@ -13,6 +13,7 @@
         length="913108"
         type="application/octet-stream"/>
     </item>
+
     <item>
       <title>Veira 1.1.0</title>
       <sparkle:version>2</sparkle:version>
@@ -24,6 +25,7 @@
         length="1783472"
         type="application/octet-stream"/>
     </item>
+
     <item>
   <title>Veira 1.2.0</title>
   <sparkle:version>3</sparkle:version>
@@ -34,7 +36,9 @@
     sparkle:edSignature="g9sklJCSLS2K4hQpA6FYqIGxVQN40PhMuuQKVSTwEaGrhRFDvBHcch6BP1X7Ram66Dro5TXuf2s/wTbR/ZcZBA=="
     length="1836792"
     type="application/octet-stream"/>
-        <item>
+    </item>
+
+    <item>
       <title>Veira 1.3.0</title>
       <sparkle:version>4</sparkle:version>
       <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
@@ -44,7 +48,19 @@
         sparkle:edSignature="Esmv44fu3ecsjtR56IcIUljc8SXm1o0uOCZrU8ibtIMe7e9lQ+01hcI/rHZa6YvBri0yivdEKN35sR9kLVxyDQ=="
         length="1872286"
         type="application/octet-stream"/>
-    </item>
+   </item>
+
+<item>
+      <title>Veira 1.3.1</title>
+      <sparkle:version>5</sparkle:version>
+      <sparkle:shortVersionString>1.3.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.0/Veira.dmg"
+        sparkle:edSignature="b/dhwUAetdR+TQPdEypB2js9BKWViEWYyd5N3dCBgyKSDPazDIBL7tQVnF9ik1PsqpiBSh312saIdILATTZ9Aw=="
+        length="1884121"
+        type="application/octet-stream"/>
 </item>
+
   </channel>
 </rss>

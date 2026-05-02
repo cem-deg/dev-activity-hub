@@ -23,6 +23,12 @@ final class ActivitySegmentBuilder {
         openSegment = nil
     }
 
+    func snapshotSegments(at time: Date) -> [ActivitySegment] {
+        guard var open = openSegment else { return closedSegments }
+        open.endTime = time
+        return closedSegments + [open]
+    }
+
     func drainSegments() -> [ActivitySegment] {
         let drained = closedSegments
         closedSegments.removeAll()

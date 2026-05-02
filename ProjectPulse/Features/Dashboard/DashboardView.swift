@@ -47,11 +47,11 @@ struct DashboardView: View {
                     let streak = appState.currentStreakDays
                     Text(streak > 0 ? "\(streak) Day Streak 🔥" : "Start your streak today")
                         .font(.caption)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
                         .foregroundStyle(streak > 0 ? .primary : .secondary)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .background(Capsule().fill(.secondary.opacity(0.10)))
+                        .background(Capsule().fill(.secondary.opacity(0.15)))
                     SessionStatusCard()
                 }
                 TodaySummarySection()
@@ -191,7 +191,7 @@ private struct SessionRow: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(DurationTextFormatter.string(from: duration))
                             .font(.subheadline)
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
                         HStack(spacing: 8) {
                             Text("\(start) – \(end)")
                                 .font(.caption)
@@ -202,7 +202,7 @@ private struct SessionRow: View {
                                     .foregroundStyle(.tertiary)
                                 Text(apps)
                                     .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(.tertiary)
                             }
                         }
                     }
@@ -1024,9 +1024,16 @@ private struct DayDetailsView: View {
                                     .foregroundStyle(.tertiary)
                             )
                     } else {
-                        VStack(spacing: 6) {
+                        VStack(spacing: 10) {
                             ForEach(sessions.reversed(), id: \.id) { session in
-                                SessionRow(session: session)
+                                HStack(alignment: .top, spacing: 12) {
+                                    Circle()
+                                        .fill(Color.accentColor)
+                                        .frame(width: 7, height: 7)
+                                        .padding(.top, 14)
+                                    SessionRow(session: session)
+                                        .frame(maxWidth: .infinity)
+                                }
                             }
                         }
                     }
@@ -1309,7 +1316,7 @@ private struct HeatmapTile: View {
 
     private var fillOpacity: Double {
         guard summary.totalDuration > 0 else { return 0 }
-        return 0.10 + intensity * 0.55
+        return 0.07 + pow(intensity, 0.7) * 0.75
     }
 
     var body: some View {
@@ -1326,7 +1333,8 @@ private struct HeatmapTile: View {
                 if summary.totalDuration > 0 {
                     Text(DurationTextFormatter.string(from: summary.totalDuration))
                         .font(.caption)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
                         .monospacedDigit()
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
@@ -1344,17 +1352,19 @@ private struct HeatmapTile: View {
             .frame(maxWidth: .infinity)
             .frame(height: 76)
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 10)
                     .fill(
                         summary.totalDuration > 0
                             ? Color.accentColor.opacity(fillOpacity)
-                            : Color.secondary.opacity(0.07)
+                            : Color.secondary.opacity(0.14)
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 10)
                             .strokeBorder(
-                                isHovered && summary.totalDuration > 0
-                                    ? Color.accentColor.opacity(0.50)
+                                isHovered
+                                    ? (summary.totalDuration > 0
+                                        ? Color.accentColor.opacity(0.55)
+                                        : Color.secondary.opacity(0.22))
                                     : Color.clear,
                                 lineWidth: 1
                             )
