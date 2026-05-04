@@ -20,8 +20,16 @@ struct DashboardView: View {
 
     private var mainDashboard: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 18) {
                 HStack {
+                    let streak = appState.currentStreakDays
+                    Text(streak > 0 ? "\(streak) Day Streak 🔥" : "Start your streak today")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(streak > 0 ? .primary : .secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Capsule().fill(.secondary.opacity(0.15)))
                     Spacer()
                     Button {
                         isShowingSettings = true
@@ -43,17 +51,7 @@ struct DashboardView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                VStack(alignment: .leading, spacing: 8) {
-                    let streak = appState.currentStreakDays
-                    Text(streak > 0 ? "\(streak) Day Streak 🔥" : "Start your streak today")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(streak > 0 ? .primary : .secondary)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Capsule().fill(.secondary.opacity(0.15)))
-                    SessionStatusCard()
-                }
+                SessionStatusCard()
                 TodaySummarySection()
                 QuickInsightsSection()
                 AppBreakdownSection()
@@ -72,7 +70,7 @@ private struct TodaySummarySection: View {
     @EnvironmentObject private var appState: AppState
     @State private var showAllSessions = false
 
-    private static let defaultSessionLimit = 2
+    private static let defaultSessionLimit = 1
 
     private var sessions: [TrackedSession] {
         (appState.todayRecord?.sessions ?? []).reversed()
@@ -127,7 +125,7 @@ private struct TodaySummarySection: View {
                     .foregroundStyle(.tertiary)
             }
         }
-        .padding(16)
+        .padding(12)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 8)
@@ -150,7 +148,7 @@ private struct TodaySummarySection: View {
                         showAllSessions.toggle()
                     }
                 } label: {
-                    Text(showAllSessions ? "Show less" : "Show all sessions")
+                    Text(showAllSessions ? "Show less" : "Show more sessions")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -216,7 +214,8 @@ private struct SessionRow: View {
                     }
                 }
                 .contentShape(Rectangle())
-                .padding(12)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
             }
             .buttonStyle(.plain)
 
@@ -256,36 +255,31 @@ private struct SessionStatusCard: View {
     @EnvironmentObject private var appState: AppState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Session Status")
-                .font(.title3)
-                .fontWeight(.semibold)
-
-            HStack(spacing: 10) {
-                Circle()
-                    .fill(appState.sessionState.indicatorColor)
-                    .frame(width: 8, height: 8)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(appState.sessionState.statusLabel)
+        HStack(spacing: 10) {
+            Circle()
+                .fill(appState.sessionState.indicatorColor)
+                .frame(width: 8, height: 8)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(appState.sessionState.statusLabel)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                if let duration = sessionDurationText {
+                    Text(duration)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    if let duration = sessionDurationText {
-                        Text(duration)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .monospacedDigit()
-                    }
+                        .fontWeight(.medium)
+                        .monospacedDigit()
                 }
-                Spacer()
-                sessionControls
             }
-            .padding(16)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.secondary.opacity(0.12))
-            )
+            Spacer()
+            sessionControls
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.secondary.opacity(0.12))
+        )
     }
 
     private var sessionDurationText: String? {
@@ -401,40 +395,44 @@ private struct AppBreakdownSection: View {
 private struct QuickInsightsSection: View {
     @EnvironmentObject private var appState: AppState
 
+    private static let columns = [
+        GridItem(.flexible(), spacing: 10),
+        GridItem(.flexible(), spacing: 10),
+        GridItem(.flexible())
+    ]
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Insights")
-                .font(.title3)
-                .fontWeight(.semibold)
+        let top = appState.topAppToday
+        let longest = appState.longestSessionToday
+        let best = appState.mostActiveDayThisWeek
 
-            HStack(spacing: 10) {
-                if let top = appState.topAppToday {
-                    QuickInsightCard(
-                        title: "Top App",
-                        value: top.appName,
-                        secondary: DurationTextFormatter.string(from: top.duration)
-                    )
-                } else {
-                    QuickInsightCard(title: "Top App", value: "—")
-                }
+        if top != nil || longest != nil || best != nil {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Quick Insights")
+                    .font(.title3)
+                    .fontWeight(.semibold)
 
-                if let longest = appState.longestSessionToday {
-                    QuickInsightCard(
-                        title: "Longest Session",
-                        value: DurationTextFormatter.string(from: longest)
-                    )
-                } else {
-                    QuickInsightCard(title: "Longest Session", value: "—")
-                }
-
-                if let best = appState.mostActiveDayThisWeek {
-                    QuickInsightCard(
-                        title: "Best Day",
-                        value: best.dayName,
-                        secondary: DurationTextFormatter.string(from: best.duration)
-                    )
-                } else {
-                    QuickInsightCard(title: "Best Day", value: "—")
+                LazyVGrid(columns: Self.columns, spacing: 10) {
+                    if let top {
+                        QuickInsightCard(
+                            title: "Top App",
+                            value: top.appName,
+                            secondary: DurationTextFormatter.string(from: top.duration)
+                        )
+                    }
+                    if let longest {
+                        QuickInsightCard(
+                            title: "Longest Session",
+                            value: DurationTextFormatter.string(from: longest)
+                        )
+                    }
+                    if let best {
+                        QuickInsightCard(
+                            title: "Best Day",
+                            value: best.dayName,
+                            secondary: DurationTextFormatter.string(from: best.duration)
+                        )
+                    }
                 }
             }
         }
@@ -463,7 +461,7 @@ private struct QuickInsightCard: View {
             }
         }
         .padding(12)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .fill(.secondary.opacity(0.08))
