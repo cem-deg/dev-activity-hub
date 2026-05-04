@@ -56,7 +56,7 @@
       <sparkle:shortVersionString>1.3.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
       <enclosure
-        url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.0/Veira.dmg"
+        url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.3.1/Veira.dmg"
         sparkle:edSignature="b/dhwUAetdR+TQPdEypB2js9BKWViEWYyd5N3dCBgyKSDPazDIBL7tQVnF9ik1PsqpiBSh312saIdILATTZ9Aw=="
         length="1884121"
         type="application/octet-stream"/>

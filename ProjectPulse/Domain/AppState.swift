@@ -185,6 +185,27 @@ final class AppState: ObservableObject {
             .sorted { $0.totalDuration > $1.totalDuration }
     }
 
+    var topAppToday: (appName: String, duration: TimeInterval)? {
+        guard let top = todayAppTotals.first else { return nil }
+        return (top.appName, top.totalDuration)
+    }
+
+    var longestSessionToday: TimeInterval? {
+        todayRecord?.sessions.map(\.segmentDuration).max()
+    }
+
+    var mostActiveDayThisWeek: (dayName: String, duration: TimeInterval)? {
+        guard let best = weeklyDaySummaries.max(by: { $0.totalDuration < $1.totalDuration }),
+              best.totalDuration > 0 else { return nil }
+        return (Self.dayNameFormatter.string(from: best.date), best.totalDuration)
+    }
+
+    private static let dayNameFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "EEEE"
+        return f
+    }()
+
     // MARK: - Onboarding
 
     func markOnboardingComplete() {

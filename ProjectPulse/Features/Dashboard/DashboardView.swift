@@ -55,6 +55,7 @@ struct DashboardView: View {
                     SessionStatusCard()
                 }
                 TodaySummarySection()
+                QuickInsightsSection()
                 AppBreakdownSection()
                 WeeklySummarySection(isShowingWeeklyDetails: $isShowingWeeklyDetails)
             }
@@ -392,6 +393,81 @@ private struct AppBreakdownSection: View {
                 TodayAppDonutChart(totals: totals)
             }
         }
+    }
+}
+
+// MARK: - Quick Insights
+
+private struct QuickInsightsSection: View {
+    @EnvironmentObject private var appState: AppState
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Quick Insights")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            HStack(spacing: 10) {
+                if let top = appState.topAppToday {
+                    QuickInsightCard(
+                        title: "Top App",
+                        value: top.appName,
+                        secondary: DurationTextFormatter.string(from: top.duration)
+                    )
+                } else {
+                    QuickInsightCard(title: "Top App", value: "—")
+                }
+
+                if let longest = appState.longestSessionToday {
+                    QuickInsightCard(
+                        title: "Longest Session",
+                        value: DurationTextFormatter.string(from: longest)
+                    )
+                } else {
+                    QuickInsightCard(title: "Longest Session", value: "—")
+                }
+
+                if let best = appState.mostActiveDayThisWeek {
+                    QuickInsightCard(
+                        title: "Best Day",
+                        value: best.dayName,
+                        secondary: DurationTextFormatter.string(from: best.duration)
+                    )
+                } else {
+                    QuickInsightCard(title: "Best Day", value: "—")
+                }
+            }
+        }
+    }
+}
+
+private struct QuickInsightCard: View {
+    let title: String
+    let value: String
+    var secondary: String? = nil
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            if let secondary {
+                Text(secondary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.secondary.opacity(0.08))
+        )
     }
 }
 
