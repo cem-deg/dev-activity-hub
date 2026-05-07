@@ -1,0 +1,405 @@
+2026-05-07 19:32:51 +0000  Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0xa774f0300; archive(resolved)="<IDEArchive: 0xa77ece450>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team(resolved)="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	Chain (13, self inclusive):
+	<IDEDistributionProcessingPipelineContext: 0xa774f0300; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionProcessingPipelineContext: 0xa7713d200; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76936080; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76e88500; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa771e7980; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa771e6300; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76936a80; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76936580; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76936d00; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="<IDEProvisioningDisambiguatableBasicTeam: 0xa8823abc0; teamID='QU6DQ2C5VB', teamName='EREN CEM DEGIRMENCI', teamType='Individual', username='erencemdegirmenci@gmail.com', isFreeProvisioningTeam='0'>">
+	<IDEDistributionContext: 0xa76e7f980; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="(null)">
+	<IDEDistributionContext: 0xa76936800; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa7e263d50>", team="(null)">
+	<IDEDistributionContext: 0xa772d0a00; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="(null)", team="(null)">
+	<IDEDistributionContext: 0xa772d0280; archive = "<IDEArchive: 0xa77ece450>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0xa774f0300>
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionCreateDestRootStep
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionCopyItemStep
+2026-05-07 19:32:51 +0000  Running /usr/bin/ditto '-V' '/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app' '/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app'
+2026-05-07 19:32:51 +0000  >>> Copying /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app 
+2026-05-07 19:32:51 +0000  copying file ./Contents/_CodeSignature/CodeResources ... 
+2026-05-07 19:32:51 +0000  3079 bytes for ./Contents/_CodeSignature/CodeResources
+2026-05-07 19:32:51 +0000  copying file ./Contents/MacOS/Veira ... 
+2026-05-07 19:32:51 +0000  1249616 bytes for ./Contents/MacOS/Veira
+2026-05-07 19:32:51 +0000  copying file ./Contents/Resources/AppIcon.icns ... 
+2026-05-07 19:32:51 +0000  52400 bytes for ./Contents/Resources/AppIcon.icns
+2026-05-07 19:32:51 +0000  copying file ./Contents/Resources/Assets.car ... 
+2026-05-07 19:32:51 +0000  521544 bytes for ./Contents/Resources/Assets.car
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/Resources ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/Resources
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/Versions/Current ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/Versions/Current
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/_CodeSignature/CodeResources ... 
+2026-05-07 19:32:51 +0000  17887 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/_CodeSignature/CodeResources
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/de.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  11559 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/de.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/he.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  9657 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/he.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ar.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  3554 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ar.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/el.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5934 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/el.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ja.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  8697 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ja.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fa.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5716 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fa.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/uk.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5842 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/uk.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_CN.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  7475 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_CN.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nb.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5539 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nb.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/es.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  7040 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/es.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/is.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  3954 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/is.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sl.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5646 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sl.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/da.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  4882 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/da.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/it.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  10956 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/it.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sk.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5675 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sk.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sv.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5160 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/sv.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ReleaseNotesColorStyle.css ... 
+2026-05-07 19:32:51 +0000  231 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ReleaseNotesColorStyle.css
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/cs.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  10774 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/cs.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ko.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  7797 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ko.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/Base.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  6249 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/Base.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/hu.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  4449 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/hu.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_HK.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  6469 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_HK.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/tr.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  6183 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/tr.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pl.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5453 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pl.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_TW.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  7625 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/zh_TW.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pt-BR.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  9976 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pt-BR.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/vi.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  12418 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/vi.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ru.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5784 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ru.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdatePermissionPrompt.nib/keyedobjects-110000.nib ... 
+2026-05-07 19:32:51 +0000  25401 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdatePermissionPrompt.nib/keyedobjects-110000.nib
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdatePermissionPrompt.nib/keyedobjects-101300.nib ... 
+2026-05-07 19:32:51 +0000  25424 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdatePermissionPrompt.nib/keyedobjects-101300.nib
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUStatus.nib ... 
+2026-05-07 19:32:51 +0000  13016 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUStatus.nib
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdateAlert.nib ... 
+2026-05-07 19:32:51 +0000  18490 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/SUUpdateAlert.nib
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fr.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  7855 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fr.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fi.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  3252 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/fi.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nl.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  9574 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nl.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/th.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5339 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/th.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nn.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5671 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/nn.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pt-PT.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  5984 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/pt-PT.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ro.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  6115 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ro.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/Info.plist ... 
+2026-05-07 19:32:51 +0000  1341 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/Info.plist
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/hr.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  6367 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/hr.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ca.lproj/Sparkle.strings ... 
+2026-05-07 19:32:51 +0000  3501 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Resources/ca.lproj/Sparkle.strings
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate ... 
+2026-05-07 19:32:51 +0000  709584 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/_CodeSignature/CodeResources ... 
+2026-05-07 19:32:51 +0000  2446 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/_CodeSignature/CodeResources
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater ... 
+2026-05-07 19:32:51 +0000  290560 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/Resources/SUStatus.nib ... 
+2026-05-07 19:32:51 +0000  13016 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/Resources/SUStatus.nib
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/Info.plist ... 
+2026-05-07 19:32:51 +0000  2400 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/Info.plist
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/PkgInfo ... 
+2026-05-07 19:32:51 +0000  8 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/PkgInfo
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/_CodeSignature/CodeResources ... 
+2026-05-07 19:32:51 +0000  2200 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/_CodeSignature/CodeResources
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader ... 
+2026-05-07 19:32:51 +0000  172240 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/Info.plist ... 
+2026-05-07 19:32:51 +0000  1717 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/Info.plist
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/_CodeSignature/CodeResources ... 
+2026-05-07 19:32:51 +0000  2200 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/_CodeSignature/CodeResources
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer ... 
+2026-05-07 19:32:51 +0000  223472 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/Info.plist ... 
+2026-05-07 19:32:51 +0000  1605 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/Info.plist
+2026-05-07 19:32:51 +0000  copying file ./Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle ... 
+2026-05-07 19:32:51 +0000  977824 bytes for ./Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/Autoupdate ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/Autoupdate
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/Updater.app ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/Updater.app
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/XPCServices ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/XPCServices
+2026-05-07 19:32:51 +0000  copying symlink ./Contents/Frameworks/Sparkle.framework/Sparkle ... 
+2026-05-07 19:32:51 +0000  linked ./Contents/Frameworks/Sparkle.framework/Sparkle
+2026-05-07 19:32:51 +0000  copying file ./Contents/Info.plist ... 
+2026-05-07 19:32:51 +0000  1927 bytes for ./Contents/Info.plist
+2026-05-07 19:32:51 +0000  copying file ./Contents/PkgInfo ... 
+2026-05-07 19:32:51 +0000  8 bytes for ./Contents/PkgInfo
+2026-05-07 19:32:51 +0000  /usr/bin/ditto exited with 0
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionEmbedProfileStep
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa92206160; bundleID='org.sparkle-project.DownloaderService', path='<DVTFilePath:0xa9250f8a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205b60; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.DownloaderService', executablePath='<DVTFilePath:0xa9250fd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa922055c0; bundleID='org.sparkle-project.InstallerLauncher', path='<DVTFilePath:0xa9250fde0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92204fc0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.InstallerLauncher', executablePath='<DVTFilePath:0xa925102a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa92206220; bundleID='(null)', path='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa922054a0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}', teamID='(null)', identifier='Autoupdate-55554944c885cecb77e63656933767b4dcfffd2f', executablePath='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa92206340; bundleID='org.sparkle-project.Sparkle.Updater', path='<DVTFilePath:0xa9250f3c0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207600; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.Sparkle.Updater', executablePath='<DVTFilePath:0xa9250f660:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa922078a0; bundleID='org.sparkle-project.Sparkle', path='<DVTFilePath:0xa9250d500:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207180; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710e40; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='(null)', teamID='QU6DQ2C5VB', identifier='org.sparkle-project.Sparkle', executablePath='<DVTFilePath:0xa9250f300:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Skipping profile for item: <IDEDistributionItem: 0xa92204b40; bundleID='com.veira.app', path='<DVTFilePath:0xa92508840:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205500; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710e40; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='{
+    "com.apple.security.network.client" = 1;
+}', teamID='QU6DQ2C5VB', identifier='com.veira.app', executablePath='<DVTFilePath:0xa9250bd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/MacOS/Veira'>', hardenedRuntime='1'>'>
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionInfoPlistStep
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionAppThinningPlistStep
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionSymbolsStep
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionSymbolsStep because it said so
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionAppThinningStep
+2026-05-07 19:32:51 +0000  Skipping step: IDEDistributionAppThinningStep because it said so
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionArchThinningStep
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc are []
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc are []
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate are []
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app are []
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B are []
+2026-05-07 19:32:51 +0000  Archs to thin for item /Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app are []
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionODRStep
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionStripXattrsStep
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Skipping stripping extended attributes because the codesign step will strip them.
+2026-05-07 19:32:51 +0000  Processing step: IDEDistributionCodesignStep
+2026-05-07 19:32:51 +0000  Entitlements for <IDEDistributionItem: 0xa92206160; bundleID='org.sparkle-project.DownloaderService', path='<DVTFilePath:0xa9250f8a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205b60; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.DownloaderService', executablePath='<DVTFilePath:0xa9250fd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader'>', hardenedRuntime='1'>'>: {
+}
+2026-05-07 19:32:51 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:51 +0000  Entitlements for <IDEDistributionItem: 0xa92206160; bundleID='org.sparkle-project.DownloaderService', path='<DVTFilePath:0xa9250f8a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205b60; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.DownloaderService', executablePath='<DVTFilePath:0xa9250fd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader'>', hardenedRuntime='1'>'> are: {
+}
+2026-05-07 19:32:51 +0000  Writing entitlements for <IDEDistributionItem: 0xa92206160; bundleID='org.sparkle-project.DownloaderService', path='<DVTFilePath:0xa9250f8a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205b60; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.DownloaderService', executablePath='<DVTFilePath:0xa9250fd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/MacOS/Downloader'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~vlvZLv
+2026-05-07 19:32:51 +0000  invoking codesign: <NSConcreteTask: 0xa769c3ac0; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~vlvZLv",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
+)'>
+2026-05-07 19:32:52 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc: signed bundle with Mach-O universal (x86_64 arm64) [org.sparkle-project.DownloaderService]
+2026-05-07 19:32:52 +0000  Entitlements for <IDEDistributionItem: 0xa922055c0; bundleID='org.sparkle-project.InstallerLauncher', path='<DVTFilePath:0xa9250fde0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92204fc0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.InstallerLauncher', executablePath='<DVTFilePath:0xa925102a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer'>', hardenedRuntime='1'>'>: {
+}
+2026-05-07 19:32:52 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:52 +0000  Entitlements for <IDEDistributionItem: 0xa922055c0; bundleID='org.sparkle-project.InstallerLauncher', path='<DVTFilePath:0xa9250fde0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92204fc0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.InstallerLauncher', executablePath='<DVTFilePath:0xa925102a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer'>', hardenedRuntime='1'>'> are: {
+}
+2026-05-07 19:32:52 +0000  Writing entitlements for <IDEDistributionItem: 0xa922055c0; bundleID='org.sparkle-project.InstallerLauncher', path='<DVTFilePath:0xa9250fde0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92204fc0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.InstallerLauncher', executablePath='<DVTFilePath:0xa925102a0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/MacOS/Installer'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~Axery4
+2026-05-07 19:32:52 +0000  invoking codesign: <NSConcreteTask: 0xa76e977f0; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~Axery4",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
+)'>
+2026-05-07 19:32:52 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc: signed bundle with Mach-O universal (x86_64 arm64) [org.sparkle-project.InstallerLauncher]
+2026-05-07 19:32:52 +0000  Entitlements for <IDEDistributionItem: 0xa92206220; bundleID='(null)', path='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa922054a0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}', teamID='(null)', identifier='Autoupdate-55554944c885cecb77e63656933767b4dcfffd2f', executablePath='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', hardenedRuntime='1'>'>: {
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}
+2026-05-07 19:32:52 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:52 +0000  Entitlements for <IDEDistributionItem: 0xa92206220; bundleID='(null)', path='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa922054a0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}', teamID='(null)', identifier='Autoupdate-55554944c885cecb77e63656933767b4dcfffd2f', executablePath='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', hardenedRuntime='1'>'> are: {
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}
+2026-05-07 19:32:52 +0000  Writing entitlements for <IDEDistributionItem: 0xa92206220; bundleID='(null)', path='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa922054a0; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+    "com.apple.application-identifier" = "org.sparkle-project.Sparkle.Autoupdate";
+}', teamID='(null)', identifier='Autoupdate-55554944c885cecb77e63656933767b4dcfffd2f', executablePath='<DVTFilePath:0xa9250d620:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~1W4Ebr
+2026-05-07 19:32:52 +0000  invoking codesign: <NSConcreteTask: 0xa76e977f0; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~1W4Ebr",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
+)'>
+2026-05-07 19:32:53 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate: signed Mach-O universal (x86_64 arm64) [Autoupdate-55554944c885cecb77e63656933767b4dcfffd2f]
+2026-05-07 19:32:53 +0000  Entitlements for <IDEDistributionItem: 0xa92206340; bundleID='org.sparkle-project.Sparkle.Updater', path='<DVTFilePath:0xa9250f3c0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207600; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.Sparkle.Updater', executablePath='<DVTFilePath:0xa9250f660:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater'>', hardenedRuntime='1'>'>: {
+}
+2026-05-07 19:32:53 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:53 +0000  Entitlements for <IDEDistributionItem: 0xa92206340; bundleID='org.sparkle-project.Sparkle.Updater', path='<DVTFilePath:0xa9250f3c0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207600; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.Sparkle.Updater', executablePath='<DVTFilePath:0xa9250f660:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater'>', hardenedRuntime='1'>'> are: {
+}
+2026-05-07 19:32:53 +0000  Writing entitlements for <IDEDistributionItem: 0xa92206340; bundleID='org.sparkle-project.Sparkle.Updater', path='<DVTFilePath:0xa9250f3c0:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207600; isSigned='1', isAdHocSigned='1', signingCertificate='(null)', entitlements='{
+}', teamID='(null)', identifier='org.sparkle-project.Sparkle.Updater', executablePath='<DVTFilePath:0xa9250f660:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/MacOS/Updater'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~abYFVd
+2026-05-07 19:32:53 +0000  invoking codesign: <NSConcreteTask: 0xa76e977f0; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~abYFVd",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
+)'>
+2026-05-07 19:32:54 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app: signed app bundle with Mach-O universal (x86_64 arm64) [org.sparkle-project.Sparkle.Updater]
+2026-05-07 19:32:54 +0000  Entitlements for <IDEDistributionItem: 0xa922078a0; bundleID='org.sparkle-project.Sparkle', path='<DVTFilePath:0xa9250d500:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207180; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710d80; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='(null)', teamID='QU6DQ2C5VB', identifier='org.sparkle-project.Sparkle', executablePath='<DVTFilePath:0xa9250f300:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle'>', hardenedRuntime='1'>'>: {
+}
+2026-05-07 19:32:54 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:54 +0000  Entitlements for <IDEDistributionItem: 0xa922078a0; bundleID='org.sparkle-project.Sparkle', path='<DVTFilePath:0xa9250d500:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207180; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710600; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='(null)', teamID='QU6DQ2C5VB', identifier='org.sparkle-project.Sparkle', executablePath='<DVTFilePath:0xa9250f300:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle'>', hardenedRuntime='1'>'> are: {
+}
+2026-05-07 19:32:54 +0000  Writing entitlements for <IDEDistributionItem: 0xa922078a0; bundleID='org.sparkle-project.Sparkle', path='<DVTFilePath:0xa9250d500:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92207180; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710600; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='(null)', teamID='QU6DQ2C5VB', identifier='org.sparkle-project.Sparkle', executablePath='<DVTFilePath:0xa9250f300:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~XkmZYZ
+2026-05-07 19:32:54 +0000  invoking codesign: <NSConcreteTask: 0xa769c0190; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~XkmZYZ",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B"
+)'>
+2026-05-07 19:32:54 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B: signed bundle with Mach-O universal (x86_64 arm64) [org.sparkle-project.Sparkle]
+2026-05-07 19:32:54 +0000  Entitlements for <IDEDistributionItem: 0xa92204b40; bundleID='com.veira.app', path='<DVTFilePath:0xa92508840:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205500; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710d80; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='{
+    "com.apple.security.network.client" = 1;
+}', teamID='QU6DQ2C5VB', identifier='com.veira.app', executablePath='<DVTFilePath:0xa9250bd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/MacOS/Veira'>', hardenedRuntime='1'>'>: {
+    "com.apple.security.network.client" = 1;
+}
+2026-05-07 19:32:54 +0000  Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-05-07 19:32:54 +0000  Entitlements for <IDEDistributionItem: 0xa92204b40; bundleID='com.veira.app', path='<DVTFilePath:0xa92508840:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205500; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710600; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='{
+    "com.apple.security.network.client" = 1;
+}', teamID='QU6DQ2C5VB', identifier='com.veira.app', executablePath='<DVTFilePath:0xa9250bd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/MacOS/Veira'>', hardenedRuntime='1'>'> are: {
+    "com.apple.security.network.client" = 1;
+}
+2026-05-07 19:32:54 +0000  Writing entitlements for <IDEDistributionItem: 0xa92204b40; bundleID='com.veira.app', path='<DVTFilePath:0xa92508840:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa92205500; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa92710600; name='Apple Development: erencemdegirmenci@gmail.com (RSBCA3A48W)', hash='425604D903DA0BEDA9EDBC9B796173E0FA920D60', serialNumber='47667530B5ABB1694980A72CE92C0D9E', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-04-23 17:05:16 +0000''>', entitlements='{
+    "com.apple.security.network.client" = 1;
+}', teamID='QU6DQ2C5VB', identifier='com.veira.app', executablePath='<DVTFilePath:0xa9250bd20:'/Users/erencemdegirmenci/Library/Developer/Xcode/Archives/2026-05-07/ProjectPulse 7.05.2026, 22.32.xcarchive/Products/Applications/Veira.app/Contents/MacOS/Veira'>', hardenedRuntime='1'>'> to: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~6spZpE
+2026-05-07 19:32:54 +0000  invoking codesign: <NSConcreteTask: 0xa769c0190; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    18B4EA5834EEA73A47E6A857F4E6768DCA35EBBD,
+    "--entitlements",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/entitlements~~~6spZpE",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"QU6DQ2C5VB\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app"
+)'>
+2026-05-07 19:32:55 +0000  codesign output: /var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app: replacing existing signature
+/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app: signed app bundle with Mach-O universal (x86_64 arm64) [com.veira.app]
+2026-05-07 19:32:55 +0000  Processing step: IDEDistributionZipODRItemStep
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-05-07 19:32:55 +0000  Processing step: IDEDistributionSkipPackagingStep
+2026-05-07 19:32:55 +0000  Processing step: IDEDistributionAppStoreInformationStep
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2026-05-07 19:32:55 +0000  Processing step: IDEDistributionGenerateProcessedDistributionItems
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa91c98d20:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>
+2026-05-07 19:32:55 +0000  [OPTIONAL] Didn't find info dictionary for <DVTFilePath:0xa91c98d20:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>: Error Domain=DVTFoundationNSBundleAdditionsErrorDomain Code=1 "Couldn't load Info dictionary for <DVTFilePath:0xa91c98d20:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>" UserInfo={NSLocalizedDescription=Couldn't load Info dictionary for <DVTFilePath:0xa91c98d20:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>}
+2026-05-07 19:32:55 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0xa91c98d20:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate'>
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa91c9bf00:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>
+2026-05-07 19:32:55 +0000  [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xa91c9bf00:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xa7d84d7a0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xa7d84d7a0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc/Contents/embedded.provisionprofile'>}
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa91c98ea0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>
+2026-05-07 19:32:55 +0000  [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xa91c98ea0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xa7d84f640:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xa7d84f640:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app/Contents/embedded.provisionprofile'>}
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa920b49c0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>
+2026-05-07 19:32:55 +0000  [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xa920b49c0:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xa7a832760:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xa7a832760:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc/Contents/embedded.provisionprofile'>}
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa920b4900:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/Frameworks/Sparkle.framework/Versions/B'>
+2026-05-07 19:32:55 +0000  IDEDistributionItem init <DVTFilePath:0xa920b4240:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app'>
+2026-05-07 19:32:55 +0000  [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xa920b4240:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xa77276a70:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xa77276a70:'/var/folders/5t/j44r00g92l1fhbdjk2rq3jqr0000gn/T/XcodeDistPipeline.~~~WkVmVu/Root/Applications/Veira.app/Contents/embedded.provisionprofile'>}
+2026-05-07 19:32:55 +0000  Processing step: IDEDistributionCreateManifestStep
+2026-05-07 19:32:55 +0000  Skipping step: IDEDistributionCreateManifestStep because it said so

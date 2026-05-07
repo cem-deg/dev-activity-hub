@@ -1,13 +1,72 @@
-project.yml
+# Veira Release / Export Checklist
 
-MARKETING_VERSION: "1.2.0"
-CURRENT_PROJECT_VERSION: "3"
+## 1) Version güncelle
+
+ProjectPulse/project.yml içinde:
+
+MARKETING_VERSION: "1.4.1"
+CURRENT_PROJECT_VERSION: "7"
+
+Kural:
+- MARKETING_VERSION kullanıcıya görünen sürüm
+- CURRENT_PROJECT_VERSION build number
+- Build number her release’te artmalı
+
+## 2) Xcode project regenerate
+
+Terminal:
 
 cd ProjectPulse
 xcodegen generate
+open ProjectPulse.xcodeproj
 
-Xcode
-Product → Archive → Export .app
+## 3) Archive al
+
+Xcode:
+
+Product → Archive
+
+Archive ekranında solda version/build doğru görünmeli:
+
+1.4.1 (7)
+
+## 4) Export al
+
+Organizer:
+
+Distribute App
+→ Direct Distribution
+→ Next
+→ Next
+→ bekle
+
+Not:
+- In Progress normal olabilir.
+- Notarization birkaç dakika sürebilir.
+- Bittiğinde export klasörü seçtirir.
+
+## 5) Export edilen app’i kontrol et
+
+Export edilen Veira.app klasörünün olduğu yerde:
+
+defaults read "Veira.app/Contents/Info" CFBundleShortVersionString
+defaults read "Veira.app/Contents/Info" CFBundleVersion
+
+Beklenen:
+1.4.1
+7
+
+Signing kontrolü:
+
+codesign -dv --verbose=4 Veira.app
+
+Beklenen:
+TeamIdentifier dolu olmalı.
+Signature artık adhoc olmamalı.
+
+## 6) DMG oluştur
+
+Veira.app’in olduğu klasörde:
 
 create-dmg \
   --volname "Veira" \
@@ -18,34 +77,78 @@ create-dmg \
   "Veira.dmg" \
   "Veira.app"
 
-  find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -type f | head -1
+## 7) DMG içini kontrol et
 
-  "ÇIKAN_PATH_BURAYA" Veira.dmg
+hdiutil attach Veira.dmg
 
-  Çıkan sparkle:edSignature="..." ve length="..." değerlerini sakla.
+defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleShortVersionString
+defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleVersion
 
-GitHub Release
+hdiutil detach "/Volumes/Veira"
 
-* Tag: v1.2.0
-* Title: Veira v1.2.0
-* Asset: Veira.dmg
+Beklenen:
+1.4.1
+7
 
-appcast.xml içine yeni item ekle
+## 8) Sparkle imzası al
 
-appcast.xml içine yeni item ekle
+DMG’nin olduğu klasörde:
+
+find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -type f | head -1
+
+Çıkan path’i kullan:
+
+"ÇIKAN_PATH" Veira.dmg
+
+Çıktıdan şunları sakla:
+- sparkle:edSignature
+- length
+
+## 9) GitHub Release oluştur
+
+GitHub → Releases → Draft new release
+
+Tag:
+v1.4.1
+
+Title:
+Veira v1.4.1
+
+Asset:
+Veira.dmg
+
+Publish release.
+
+## 10) appcast.xml güncelle
+
+Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 <item>
-  <title>Veira 1.2.0</title>
-  <sparkle:version>3</sparkle:version>
-  <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+  <title>Veira 1.4.1</title>
+  <sparkle:version>7</sparkle:version>
+  <sparkle:shortVersionString>1.4.1</sparkle:shortVersionString>
   <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
   <enclosure
-    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.2.0/Veira.dmg"
+    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.1/Veira.dmg"
     sparkle:edSignature="BURAYA_SIGNATURE"
     length="BURAYA_LENGTH"
     type="application/octet-stream"/>
 </item>
 
+## 11) Push
+
 git add appcast.xml ProjectPulse/project.yml
-git commit -m "release v1.2.0"
+git commit -m "release v1.4.1"
 git push
+
+## 12) Final test
+
+Eski app’ten:
+
+Check for Updates…
+
+Beklenen:
+- yeni sürüm bulunur
+- indirir
+- relaunch eder
+- Settings/About kısmında Version 1.4.1 (7) görünür

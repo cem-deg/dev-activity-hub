@@ -72,6 +72,16 @@
         length="1893427"
         type="application/octet-stream"/>
 </item>
-
+<item>
+      <title>Veira 1.4.1</title>
+      <sparkle:version>7</sparkle:version>
+      <sparkle:shortVersionString>1.4.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.0/Veira.dmg"
+        sparkle:edSignature="OLwcDZWt7+J8upUwSyB2ukW1xJUYL4zzDKzSGYCEaQZI5N/KLgmxN/JeMBgW1ouIoE2P7Lx8WXNdUkycfwg7DA=="
+        length="1893427"
+        type="application/octet-stream"/>
+</item>
   </channel>
 </rss>
