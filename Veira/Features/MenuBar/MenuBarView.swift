@@ -137,6 +137,7 @@ struct MenuBarView: View {
                 dashboardController.open(appState: appState, updaterService: updaterService)
             }
             PanelButton("Quit Veira") {
+                appState.prepareForQuit()
                 NSApplication.shared.terminate(nil)
             }
         }

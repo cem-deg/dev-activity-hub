@@ -4,8 +4,8 @@
 
 Veira/project.yml içinde:
 
-MARKETING_VERSION: "1.4.1"
-CURRENT_PROJECT_VERSION: "7"
+MARKETING_VERSION: "1.4.2"
+CURRENT_PROJECT_VERSION: "8"
 
 Kural:
 - MARKETING_VERSION kullanıcıya görünen sürüm
@@ -28,7 +28,7 @@ Product → Archive
 
 Archive ekranında solda version/build doğru görünmeli:
 
-1.4.1 (7)
+1.4.2 (8)
 
 ## 4) Export al
 
@@ -163,10 +163,10 @@ find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -ty
 GitHub → Releases → Draft new release
 
 Tag:
-v1.4.1
+v1.4.2
 
 Title:
-Veira v1.4.1
+Veira v1.4.2
 
 Asset:
 Veira.dmg
@@ -178,12 +178,12 @@ Publish release.
 Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 <item>
-  <title>Veira 1.4.1</title>
-  <sparkle:version>7</sparkle:version>
-  <sparkle:shortVersionString>1.4.1</sparkle:shortVersionString>
+  <title>Veira 1.4.2</title>
+  <sparkle:version>8</sparkle:version>
+  <sparkle:shortVersionString>1.4.2</sparkle:shortVersionString>
   <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
   <enclosure
-    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.1/Veira.dmg"
+    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.2/Veira.dmg"
     sparkle:edSignature="BURAYA_SIGNATURE"
     length="BURAYA_LENGTH"
     type="application/octet-stream"/>
@@ -192,7 +192,7 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 ## 11) Push
 
 git add appcast.xml Veira/project.yml
-git commit -m "release v1.4.1"
+git commit -m "release v1.4.2"
 git push
 
 ## 12) Final test
@@ -205,4 +205,4 @@ Beklenen:
 - yeni sürüm bulunur
 - indirir
 - relaunch eder
-- Settings/About kısmında Version 1.4.1 (7) görünür
+- Settings/About kısmında Version 1.4.2 (8) görünür

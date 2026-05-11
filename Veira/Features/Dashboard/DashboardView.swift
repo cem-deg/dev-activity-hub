@@ -899,7 +899,8 @@ private struct WeeklyBarChart: View {
                                 switch phase {
                                 case .active(let location):
                                     tooltipLocation = location
-                                    let origin = geo[proxy.plotAreaFrame].origin
+                                    guard let plotFrame = proxy.plotFrame else { return }
+                                    let origin = geo[plotFrame].origin
                                     let x = location.x - origin.x
                                     if let date: Date = proxy.value(atX: x) {
                                         hoveredDate = date

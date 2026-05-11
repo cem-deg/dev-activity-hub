@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 enum SessionState {
@@ -59,6 +60,9 @@ final class AppState: ObservableObject {
 
     @Published private var workDays: [WorkDayRecord] = SessionStore.load()
 
+    // Retained so the observer can be removed if AppState is ever deallocated.
+    private var terminateObserver: NSObjectProtocol?
+
     init() {
         monitor.onEvent = { [weak self] event in
             self?.segmentBuilder.handle(event)
@@ -69,6 +73,17 @@ final class AppState: ObservableObject {
         idleMonitor.onIdleStarted = { [weak self] lastActivityAt in self?.idlePause(lastActivityAt: lastActivityAt) }
         idleMonitor.onIdleEnded   = { [weak self] in self?.handleIdleEnded() }
         ActivityNotifier.requestPermission()
+
+        // Cover quit paths that bypass the menu button (Cmd+Q, Apple menu).
+        // queue: nil runs the block synchronously on the posting thread (main thread),
+        // ensuring the write completes before applicationWillTerminate returns.
+        terminateObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.willTerminateNotification,
+            object: nil,
+            queue: nil
+        ) { [weak self] _ in
+            self?.prepareForQuit()
+        }
     }
 
     // MARK: - Read-only surfaces
@@ -211,6 +226,60 @@ final class AppState: ObservableObject {
     func markOnboardingComplete() {
         hasCompletedOnboarding = true
         UserDefaults.standard.set(true, forKey: "com.veira.hasCompletedOnboarding")
+    }
+
+    // MARK: - Quit preparation
+
+    // Finalizes any in-progress session and writes the workDays snapshot to disk synchronously.
+    //
+    // Idempotent: sessionStartedAt is cleared on the first call, so a second call (e.g.
+    // from willTerminateNotification after the menu button already ran this) skips session
+    // finalization and just re-issues the synchronous write — safe, no duplicate sessions.
+    func prepareForQuit() {
+        // Stop all timers and monitors first so no new saveAsync calls can be queued
+        // between here and the saveFinal call at the end.
+        cancelPauseReminder()
+        stopAutosaveTimer()
+        stopDisplayTimer()
+        monitor.stop()
+        idleMonitor.stop()
+
+        // sessionStartedAt is the authoritative indicator that a session is open.
+        if let startedAt = sessionStartedAt {
+            let now = Date()
+
+            // Close the open segment if the session is currently active.
+            if sessionState == .active {
+                if let runStart = activeRunStartedAt {
+                    accumulatedSessionDuration += now.timeIntervalSince(runStart)
+                }
+                activeRunStartedAt = nil
+                segmentBuilder.closeCurrentSegment(at: now)
+            }
+
+            let session = TrackedSession(
+                id: currentSessionId ?? UUID(),
+                startedAt: startedAt,
+                endedAt: now,
+                segments: segmentBuilder.drainSegments()
+            )
+
+            let dayKey = Calendar.current.startOfDay(for: startedAt)
+            if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {
+                workDays[idx].sessions.append(session)
+            } else {
+                workDays.append(WorkDayRecord(date: dayKey, sessions: [session]))
+            }
+
+            // Clear so a second call to prepareForQuit skips this block.
+            sessionStartedAt = nil
+            currentSessionId = nil
+        }
+
+        // Write synchronously. saveFinal advances the generation counter (poisoning any
+        // remaining queued async blocks) then runs writeQueue.sync, which waits for any
+        // currently-executing async block to drain before writing the final snapshot.
+        SessionStore.saveFinal(workDays)
     }
 
     // MARK: - Session control

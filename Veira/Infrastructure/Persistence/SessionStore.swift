@@ -74,6 +74,21 @@ enum SessionStore {
         }
     }
 
+    // Synchronous final save for quit-time use. Two-step anti-stale guarantee:
+    //   1. nextGeneration() advances the counter so every queued-but-not-yet-started
+    //      saveAsync block will fail the `currentGeneration() == gen` check and skip.
+    //   2. writeQueue.sync waits for any currently-executing saveAsync block to finish
+    //      before running — so our write is always the last one on the queue.
+    // The caller (main thread) blocks until the write completes.
+    static func saveFinal(_ workDays: [WorkDayRecord]) {
+        _ = nextGeneration()      // Poison all pending async blocks.
+        let url = fileURL         // Resolve path on calling thread (has FileManager side effects).
+        writeQueue.sync {
+            guard let data = try? JSONEncoder().encode(workDays) else { return }
+            try? data.write(to: url, options: .atomic)
+        }
+    }
+
     private static func deduplicated(_ sessions: [TrackedSession]) -> [TrackedSession] {
         var best: [UUID: TrackedSession] = [:]
         for session in sessions {
