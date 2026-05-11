@@ -3,7 +3,7 @@ import SwiftUI
 import UserNotifications
 
 @main
-struct ProjectPulseApp: App {
+struct VeiraApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var dashboardController = DashboardWindowController()
     @StateObject private var onboardingController = OnboardingWindowController()

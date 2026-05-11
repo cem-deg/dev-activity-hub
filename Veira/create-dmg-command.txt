@@ -2,7 +2,7 @@
 
 ## 1) Version güncelle
 
-ProjectPulse/project.yml içinde:
+Veira/project.yml içinde:
 
 MARKETING_VERSION: "1.4.1"
 CURRENT_PROJECT_VERSION: "7"
@@ -16,9 +16,9 @@ Kural:
 
 Terminal:
 
-cd ProjectPulse
+cd Veira
 xcodegen generate
-open ProjectPulse.xcodeproj
+open Veira.xcodeproj
 
 ## 3) Archive al
 
@@ -53,8 +53,8 @@ defaults read "Veira.app/Contents/Info" CFBundleShortVersionString
 defaults read "Veira.app/Contents/Info" CFBundleVersion
 
 Beklenen:
-1.4.1
-7
+1.X.X
+BUILD_NUMBER
 
 Signing kontrolü:
 
@@ -64,9 +64,44 @@ Beklenen:
 TeamIdentifier dolu olmalı.
 Signature artık adhoc olmamalı.
 
+## 5.5) xattr temizle (ZORUNLU — DMG’den önce yapılmalı)
+
+# Neden gerekli:
+# Proje iCloud Drive ile senkronize bir klasörde (örn. ~/Documents/GitHub/) ise
+# iCloud File Provider daemon, Sparkle.framework içindeki dosyalara otomatik olarak
+# com.apple.FinderInfo ve com.apple.fileprovider.fpfs#P xattr’ları ekler.
+# Bu xattr’lar notarization’ı bozmaz ama codesign --strict kontrolünü geçemez.
+# spctl/Gatekeeper kabul eder; kullanıcı deneyimi etkilenmez.
+# xattr temizlemek code signature hash’ini etkilemez — güvenlidir.
+#
+# ÖNEMLI: İCloud bu xattr’ları saniyeler içinde tekrar ekler.
+# Bu yüzden app önce /tmp’ye (iCloud dışına) kopyalanmalı,
+# oradan strip edilmeli, ve create-dmg /tmp’deki kopya üzerinden çalışmalıdır.
+
+# Adım 1: /tmp’ye kopyala (iCloud takip xattr’ını da atar)
+mkdir -p /tmp/VeiraRelease
+ditto --noextattr /EXPORT_KLASÖRÜ/Veira.app /tmp/VeiraRelease/Veira.app
+
+# Adım 2: Kalan FinderInfo xattr’larını temizle
+xattr -cr /tmp/VeiraRelease/Veira.app
+
+# Adım 3: Doğrula
+xattr -lr /tmp/VeiraRelease/Veira.app
+# Beklenen: hiçbir çıktı (tamamen temiz)
+
+codesign --verify --deep --strict --verbose=2 /tmp/VeiraRelease/Veira.app
+# Beklenen: hata çıkmamalı; "valid on disk" ve "satisfies its Designated Requirement"
+
+spctl -a -vv -t exec /tmp/VeiraRelease/Veira.app
+# Beklenen: source=Notarized Developer ID
+
+Bu adım geçilmeden DMG oluşturulmamalı.
+
 ## 6) DMG oluştur
 
-Veira.app’in olduğu klasörde:
+/tmp/VeiraRelease klasöründe (iCloud dışında — adım 5.5 sonrası):
+
+cd /tmp/VeiraRelease
 
 create-dmg \
   --volname "Veira" \
@@ -77,6 +112,9 @@ create-dmg \
   "Veira.dmg" \
   "Veira.app"
 
+# Oluşan DMG'yi release klasörüne taşı
+mv /tmp/VeiraRelease/Veira.dmg /EXPORT_KLASÖRÜ/Veira.dmg
+
 ## 7) DMG içini kontrol et
 
 hdiutil attach Veira.dmg
@@ -84,11 +122,27 @@ hdiutil attach Veira.dmg
 defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleShortVersionString
 defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleVersion
 
-hdiutil detach "/Volumes/Veira"
+Beklenen:
+1.X.X
+BUILD_NUMBER
+
+Strict codesign kontrolü (DMG içindeki app üzerinde):
+
+codesign --verify --deep --strict --verbose=2 "/Volumes/Veira/Veira.app"
 
 Beklenen:
-1.4.1
-7
+(hata çıkmamalı — "valid on disk" ve "satisfies its Designated Requirement" görünmeli)
+
+spctl kontrolü:
+
+spctl -a -vv -t exec "/Volumes/Veira/Veira.app"
+
+Beklenen:
+source=Notarized Developer ID
+
+hdiutil detach "/Volumes/Veira"
+
+NOT: Bu üç kontrol geçilmeden 8. adıma geçilmemelidir.
 
 ## 8) Sparkle imzası al
 
@@ -137,7 +191,7 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 ## 11) Push
 
-git add appcast.xml ProjectPulse/project.yml
+git add appcast.xml Veira/project.yml
 git commit -m "release v1.4.1"
 git push
 

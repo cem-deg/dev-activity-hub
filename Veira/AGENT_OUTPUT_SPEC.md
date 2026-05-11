@@ -1,6 +1,6 @@
 # AGENT_OUTPUT_SPEC.md
 
-This file standardizes how all agents communicate so that outputs remain easy to hand off across ChatGPT, Claude Code, Codex, and Gemini.
+This file standardizes communication for the Codex-planned, Claude Code-implemented workflow, including any scoped Gemini review.
 
 ## Goal
 All agent outputs must be:
@@ -62,7 +62,7 @@ Use if:
 Use only for optional improvements that should not block progress
 
 ## Handoff Rule
-When handing work from one agent to another:
+When handing work from Codex to Claude Code, from Codex to a scoped reviewer, or returning results to Codex:
 - preserve section headings
 - do not collapse risks into vague summaries
 - do not hide uncertainty

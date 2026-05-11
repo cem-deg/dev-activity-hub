@@ -1,7 +1,7 @@
 # PROJECT_RULES.md
 
 ## Core Principle
-Project Pulse must remain controlled, privacy-aware, and correctness-first.
+Veira must remain controlled, privacy-aware, and correctness-first.
 
 ## Priority Order
 When tradeoffs appear, use this order:
@@ -20,18 +20,19 @@ When tradeoffs appear, use this order:
 - The user must explicitly start tracking from the menu bar.
 - Launch at login does not imply auto-tracking.
 - Idle must be represented separately.
-- Category and productivity classification must be explainable.
-- Default classification plus user override is required.
+- Per-app usage breakdowns must be explainable.
+- Session state and reminder state must remain understandable to the user.
 
 ## V1 Scope Rules
 Allowed in V1:
 - active app tracking
 - idle detection
-- classification system
 - local persistence
 - onboarding
 - menu bar controls
 - dashboard summaries
+- settings
+- update support
 
 Not allowed in V1 unless explicitly approved:
 - iOS support
@@ -66,12 +67,11 @@ Not allowed in V1 unless explicitly approved:
 - Idle thresholds must remain user-controlled only within the approved set.
 - Any future idle confirmation prompt requires explicit approval and is not default V1 behavior.
 
-## Classification Rules
+## App Identity and Insight Rules
 - Use bundle identifier as the core app identity key.
-- Built-in classifications must be deterministic.
-- User override must take precedence over built-in mapping.
-- Classification must remain understandable to the user.
-- Avoid hidden logic that makes classification hard to explain.
+- Per-app summaries must be deterministic.
+- Session, idle, and reminder states must remain understandable to the user.
+- Avoid hidden logic that makes insights hard to explain.
 
 ## Engineering Rules
 - No random refactors.
@@ -84,19 +84,25 @@ Not allowed in V1 unless explicitly approved:
 - Do not introduce unnecessary dependencies.
 
 ## Workflow Rules
-- ChatGPT handles planning, scope control, and task definition.
-- Claude Code is the primary implementation agent.
-- Codex handles low/medium complexity implementation and audit tasks.
-- Gemini handles review, risk analysis, and issue classification.
-- All agents must follow shared project context and output standards.
+- Codex handles planning, scope control, task definition, audit, documentation updates, release-readiness guidance, and implementation handoff prompts.
+- ChatGPT is no longer the main planning assistant for this project.
+- Claude Code is the primary coding implementation agent.
+- Gemini handles scoped review, risk analysis, and issue classification only.
+- If implementation work belongs to another agent, Codex must provide a direct English prompt and identify the target agent.
+- Any assisting agent must follow shared project context and output standards.
 
 ## Documentation Rules
 Before implementation work grows, maintain:
 - PROJECT_CONTEXT.md
 - PROJECT_RULES.md
+- AGENTS.md
 - CLAUDE.md
+- CODEX_TEMPLATE.md
 - TASK_TEMPLATE.md
 - REVIEW_TEMPLATE.md
+- GEMINI_REVIEW_TEMPLATE.md
+- REVIEW_LOG.md
+- SKILLS.md
 - any task-specific handoff notes as needed
 
 ## Output Rules

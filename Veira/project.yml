@@ -1,4 +1,4 @@
-name: ProjectPulse
+name: Veira
 
 options:
   bundleIdPrefix: com.veira
@@ -20,7 +20,7 @@ packages:
     from: "2.0.0"
 
 targets:
-  ProjectPulse:
+  Veira:
     type: application
     platform: macOS
     deploymentTarget: "14.0"

@@ -42,7 +42,9 @@ What must NOT be changed or expanded?
 ## Constraints
 - Follow PROJECT_CONTEXT.md
 - Follow PROJECT_RULES.md
-- Follow CLAUDE.md
+- Follow AGENTS.md
+- Follow CODEX_TEMPLATE.md for planning, audit, and handoff work
+- Follow CLAUDE.md for coding implementation work
 - Do not expand scope
 - Do not refactor unrelated code
 - Keep implementation controlled and reviewable

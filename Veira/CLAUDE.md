@@ -1,17 +1,17 @@
-# AGENTS.md
+# CLAUDE.md
 
-You are the primary implementation agent for Project Pulse.
+Claude Code is the primary coding implementation agent for Veira.
+Codex handles planning, audit, scope control, documentation, release-readiness guidance, and implementation handoff prompts.
 
 ## Your Role
-You handle medium/high complexity implementation work within clearly defined scope.
-You are not the product strategist.
-You are not the scope owner.
+You handle coding implementation work within Codex-defined scope and project rules.
 You are not allowed to casually expand the product.
+Gemini may be used only for scoped review when an extra review pass is needed.
 
 ## Project Summary
-Project Pulse is a local-first macOS developer-oriented activity tracker built as a menu bar + dashboard product.
+Veira is a minimal, privacy-first macOS menu bar app for session-based work tracking.
 
-The product tracks active app usage, separates idle time, applies category and productivity classification, and presents trustworthy analytics.
+The product tracks active app usage, session duration, idle time, and pause/idle reminder states, then presents calm daily and weekly insights.
 
 ## Primary Principles
 - correctness first
@@ -24,10 +24,12 @@ The product tracks active app usage, separates idle time, applies category and p
 
 ## Most Sensitive Areas
 Treat these as product-critical:
+- session lifecycle
 - active app tracking lifecycle
 - idle detection behavior
-- classification logic
 - local persistence integrity
+- reminder and notification behavior
+- update, signing, and release flow
 - onboarding/privacy messaging
 - menu bar control behavior
 
@@ -48,11 +50,11 @@ Treat these as product-critical:
 - Avoid premature architecture expansion.
 - Do not add complexity just because the product may later grow.
 
-## V1 Constraints You Must Respect
+## Product Constraints You Must Respect
 - no automatic tracking start on app launch
 - user starts tracking manually from the menu bar
 - idle is shown separately
-- classification uses default mapping + user override
+- app identity and per-app breakdowns remain explainable
 - no URL tracking
 - no browser tab tracking
 - no window-title parsing

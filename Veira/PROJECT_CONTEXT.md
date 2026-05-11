@@ -1,7 +1,7 @@
-# Project Pulse
+# Veira
 
 ## Project Type
-Project Pulse is a local-first macOS developer-oriented activity tracker.
+Veira is a minimal, privacy-first macOS menu bar app for session-based work tracking.
 
 ## Product Shape
 The product is built as:
@@ -14,7 +14,7 @@ This is not an iPhone product.
 This is not a cloud-first SaaS.
 
 ## Product Goal
-Help users understand where their time goes across development-related applications by tracking active app usage, separating idle time, classifying usage into categories, and presenting clear summaries in a trustworthy way.
+Help users understand where their time goes across applications, sessions, and days by tracking active app usage, separating idle time, and presenting clear local-only summaries in a trustworthy way.
 
 ## Product Character
 - developer-oriented
@@ -27,31 +27,34 @@ Help users understand where their time goes across development-related applicati
 ## Confirmed Product Decisions
 - macOS only
 - menu bar + dashboard
-- local-first
+- local-only
+- privacy-first
 - tracking never starts automatically on app launch
 - user must manually start tracking from the menu bar
 - onboarding exists
 - launch at login may be enabled
 - launch at login must NOT imply auto-tracking
 - active application tracking is core
+- session duration tracking is core
 - idle detection is core
 - idle must be shown separately in analytics
-- category classification is core
-- productivity classification is core
-- default classification + user override is core
+- reminder timing must remain configurable
+- update support is part of release readiness
 
-## V1 Core Features
+## Core Features
 - active app tracking
 - idle detection
 - app identity handling via bundle identifier
-- default app classification
-- user override for category and productivity classification
 - today summary
 - total tracked time
 - app breakdown
 - weekly view
 - menu bar quick summary
 - pause / resume tracking
+- session timeline
+- settings
+- launch at login
+- Sparkle update checks
 - clear privacy-oriented onboarding
 
 ## V1 Non-Goals
@@ -64,15 +67,17 @@ Help users understand where their time goes across development-related applicati
 - no screenshot capture
 - no AI classification
 - no “smart” activity inference that cannot be explained clearly
-- no deep work intelligence in V1
-- no cloud sync in V1
+- no deep work intelligence unless explicitly approved
+- no cloud sync
 
 ## Sensitive Product Areas
 These areas are product-critical and must be treated carefully:
 - idle detection correctness
 - app tracking correctness
-- classification correctness
+- session state correctness
 - persistence correctness
+- reminder and notification behavior
+- update, signing, and release correctness
 - privacy messaging
 - menu bar control behavior
 
@@ -82,7 +87,7 @@ Explainable behavior matters more than clever-looking behavior.
 Privacy clarity matters more than aggressive automation.
 
 ## Current Phase
-Foundation / planning phase
+Release-ready maintenance and scoped evolution phase
 
 ## Immediate Objective
-Establish project rules, agent workflow, templates, and documentation before beginning implementation inside Xcode.
+Keep project rules, workflow templates, and documentation aligned with the Codex planning / Claude Code implementation process before starting the next full audit or scoped implementation task.

@@ -71,7 +71,7 @@ Veira is an early but fully functional version. Core tracking, persistence, idle
 git clone https://github.com/cem-deg/dev-activity-hub.git
 cd dev-activity-hub/Veira
 xcodegen generate
-open ProjectPulse.xcodeproj
+open Veira.xcodeproj
 ```
 
 ---

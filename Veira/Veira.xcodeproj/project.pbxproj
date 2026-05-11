@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		100DD17677687FD98EF7D816 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D03655A4FF245B75CB31DB /* IdleMonitor.swift */; };
+		30FF4882EF4A31A2A3233254 /* ActivityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806DDFFE22BD3518DD3C7A36 /* ActivityEvent.swift */; };
+		3D4E3E12DA79DEB007D94062 /* ActivitySegmentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464F6EB25635BE16F551ED7 /* ActivitySegmentBuilder.swift */; };
+		3F277DEAFED513CA49D83333 /* AppUsageTotal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */; };
+		42A6D7E643DA0E9EEB53B48B /* DashboardWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */; };
+		4C1CCC86B61CC9004CA23800 /* VeiraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */; };
+		617EC72ADC293C67038885FA /* DurationTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587C60CD937B164EA9976373 /* DurationTextFormatter.swift */; };
+		784A14E979DB85DCF2D441E5 /* ActivityEventBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */; };
+		7B31913DB184E427A2ECF363 /* UpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06DE21D6F99AED021C8868 /* UpdaterService.swift */; };
+		7C0D72CABE9B83588D9E82FF /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 7606B64C3BC42065D285A416 /* Sparkle */; };
+		91407DE15DD9823F211FFCB5 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */; };
+		9B02FE31EF17C5D7120E6B10 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053F4DC2CE2BC5A59B6603C3 /* DashboardView.swift */; };
+		9D65C3BF5A92F253B195037E /* DaySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1962FEF339B142E7A6BB68B /* DaySummary.swift */; };
+		C176104C88CB73787F1F8B85 /* ActivitySegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC88B12856033A41894131D /* ActivitySegment.swift */; };
+		C1DDF8A5E0341AE444AFB14A /* TrackedSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1C8F450DE4DBB58E81B18 /* TrackedSession.swift */; };
+		CC85E0024E228B7C31E56F63 /* ActiveAppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */; };
+		D181BE7E581255761DF0557D /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CD140AEC86F9C7AF77116F /* OnboardingView.swift */; };
+		DC333EB6F0F285E587A62FF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9522AC2E97D505A9926649F6 /* Assets.xcassets */; };
+		E3AE59700BF315CD220CD3CA /* WorkDayRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */; };
+		E7EEF68F0BA2883FAF025F1A /* ActivityNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E06C368711D1D82EBBCD130 /* ActivityNotifier.swift */; };
+		E9105238CFE31127435EC906 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B606FB93E032D47A107D538 /* SessionStore.swift */; };
+		FB01FF047CFA94CFEC2A2DD6 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7204FFDC1506ED733CAD8550 /* MenuBarView.swift */; };
+		FBE66F4AC44120CC07150C38 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF1D662D8B008ECC0721090 /* AppState.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		053F4DC2CE2BC5A59B6603C3 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		1CE1C8F450DE4DBB58E81B18 /* TrackedSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedSession.swift; sourceTree = "<group>"; };
+		1D06DE21D6F99AED021C8868 /* UpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterService.swift; sourceTree = "<group>"; };
+		1E06C368711D1D82EBBCD130 /* ActivityNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityNotifier.swift; sourceTree = "<group>"; };
+		221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTotal.swift; sourceTree = "<group>"; };
+		2464F6EB25635BE16F551ED7 /* ActivitySegmentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegmentBuilder.swift; sourceTree = "<group>"; };
+		2CC88B12856033A41894131D /* ActivitySegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegment.swift; sourceTree = "<group>"; };
+		3A37D0019F91CF8942C16A47 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		4B606FB93E032D47A107D538 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindowController.swift; sourceTree = "<group>"; };
+		579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMonitor.swift; sourceTree = "<group>"; };
+		587C60CD937B164EA9976373 /* DurationTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTextFormatter.swift; sourceTree = "<group>"; };
+		6CB3B92CB46AE4E3473A386A /* Veira.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7204FFDC1506ED733CAD8550 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		806DDFFE22BD3518DD3C7A36 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
+		82CD140AEC86F9C7AF77116F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		83B87CF7B875A63D7B61856E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VeiraApp.swift; sourceTree = "<group>"; };
+		8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
+		9522AC2E97D505A9926649F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		95F59C53E1C80F915F3A4961 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		C1962FEF339B142E7A6BB68B /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
+		C8370C75EAD383EE813F47CF /* Veira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veira.entitlements; sourceTree = "<group>"; };
+		CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
+		E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEventBuffer.swift; sourceTree = "<group>"; };
+		F1D03655A4FF245B75CB31DB /* IdleMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleMonitor.swift; sourceTree = "<group>"; };
+		FDF1D662D8B008ECC0721090 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		992446F611BF31D6E3D5C964 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0D72CABE9B83588D9E82FF /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		095E30EB1F98AAA57FFD4236 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				5739CCD75BCC559325BD0751 /* Models */,
+				E082A34F788FFD0C41967E44 /* Session */,
+				FDF1D662D8B008ECC0721090 /* AppState.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		0D9A3769CA7CC1D94C2F3399 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		16B6182059A2A3C289753F2E /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				B13BDF4FA736CEF27B25C3FC /* Notifications */,
+				E2D1BD34E7DD56FE07118773 /* Persistence */,
+				0D9A3769CA7CC1D94C2F3399 /* System */,
+				837734170AF7AE6504D8AB1D /* Tracking */,
+				57D07BBF4784B9FBCDF8AFA0 /* Updater */,
+				95F59C53E1C80F915F3A4961 /* .gitkeep */,
+				4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		293B2CB87C12CD8A6BE2F848 = {
+			isa = PBXGroup;
+			children = (
+				754A68F320F78B437B024FAF /* App */,
+				095E30EB1F98AAA57FFD4236 /* Domain */,
+				861B3A062E2B6F1F014609DD /* Features */,
+				16B6182059A2A3C289753F2E /* Infrastructure */,
+				7D07E99E0D37EB746B06A1B6 /* Shared */,
+				9522AC2E97D505A9926649F6 /* Assets.xcassets */,
+				4A007BE3C9571FA44052A315 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4A007BE3C9571FA44052A315 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6CB3B92CB46AE4E3473A386A /* Veira.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5739CCD75BCC559325BD0751 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				806DDFFE22BD3518DD3C7A36 /* ActivityEvent.swift */,
+				2CC88B12856033A41894131D /* ActivitySegment.swift */,
+				221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */,
+				C1962FEF339B142E7A6BB68B /* DaySummary.swift */,
+				1CE1C8F450DE4DBB58E81B18 /* TrackedSession.swift */,
+				CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		57D07BBF4784B9FBCDF8AFA0 /* Updater */ = {
+			isa = PBXGroup;
+			children = (
+				1D06DE21D6F99AED021C8868 /* UpdaterService.swift */,
+			);
+			path = Updater;
+			sourceTree = "<group>";
+		};
+		5817D1A067822EE85C6D897F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				82CD140AEC86F9C7AF77116F /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		754A68F320F78B437B024FAF /* App */ = {
+			isa = PBXGroup;
+			children = (
+				83B87CF7B875A63D7B61856E /* Info.plist */,
+				C8370C75EAD383EE813F47CF /* Veira.entitlements */,
+				8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7D07E99E0D37EB746B06A1B6 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3A37D0019F91CF8942C16A47 /* .gitkeep */,
+				587C60CD937B164EA9976373 /* DurationTextFormatter.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		837734170AF7AE6504D8AB1D /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */,
+				E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */,
+				F1D03655A4FF245B75CB31DB /* IdleMonitor.swift */,
+			);
+			path = Tracking;
+			sourceTree = "<group>";
+		};
+		861B3A062E2B6F1F014609DD /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				AC3AF0352848267AD9CD79E0 /* Dashboard */,
+				E071A1BE4E4273AE33CD754A /* MenuBar */,
+				5817D1A067822EE85C6D897F /* Onboarding */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		AC3AF0352848267AD9CD79E0 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				053F4DC2CE2BC5A59B6603C3 /* DashboardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		B13BDF4FA736CEF27B25C3FC /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				1E06C368711D1D82EBBCD130 /* ActivityNotifier.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		E071A1BE4E4273AE33CD754A /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				7204FFDC1506ED733CAD8550 /* MenuBarView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		E082A34F788FFD0C41967E44 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				2464F6EB25635BE16F551ED7 /* ActivitySegmentBuilder.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		E2D1BD34E7DD56FE07118773 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				4B606FB93E032D47A107D538 /* SessionStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		959E21CB4D07499BEFB0D612 /* Veira */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3ABFBDD6EC7089AD75A670E8 /* Build configuration list for PBXNativeTarget "Veira" */;
+			buildPhases = (
+				49A2288AD670C4F18D4C104B /* Sources */,
+				42FA436112AC282340D53BFB /* Resources */,
+				992446F611BF31D6E3D5C964 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Veira;
+			packageProductDependencies = (
+				7606B64C3BC42065D285A416 /* Sparkle */,
+			);
+			productName = Veira;
+			productReference = 6CB3B92CB46AE4E3473A386A /* Veira.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		475B2CE9244320E14F00EBE3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					959E21CB4D07499BEFB0D612 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FF3CAE8B103998422D8783F0 /* Build configuration list for PBXProject "Veira" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 293B2CB87C12CD8A6BE2F848;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F1B7C6B53A57E42C950843D5 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4A007BE3C9571FA44052A315 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				959E21CB4D07499BEFB0D612 /* Veira */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		42FA436112AC282340D53BFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC333EB6F0F285E587A62FF3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		49A2288AD670C4F18D4C104B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC85E0024E228B7C31E56F63 /* ActiveAppMonitor.swift in Sources */,
+				30FF4882EF4A31A2A3233254 /* ActivityEvent.swift in Sources */,
+				784A14E979DB85DCF2D441E5 /* ActivityEventBuffer.swift in Sources */,
+				E7EEF68F0BA2883FAF025F1A /* ActivityNotifier.swift in Sources */,
+				C176104C88CB73787F1F8B85 /* ActivitySegment.swift in Sources */,
+				3D4E3E12DA79DEB007D94062 /* ActivitySegmentBuilder.swift in Sources */,
+				FBE66F4AC44120CC07150C38 /* AppState.swift in Sources */,
+				3F277DEAFED513CA49D83333 /* AppUsageTotal.swift in Sources */,
+				9B02FE31EF17C5D7120E6B10 /* DashboardView.swift in Sources */,
+				42A6D7E643DA0E9EEB53B48B /* DashboardWindowController.swift in Sources */,
+				9D65C3BF5A92F253B195037E /* DaySummary.swift in Sources */,
+				617EC72ADC293C67038885FA /* DurationTextFormatter.swift in Sources */,
+				100DD17677687FD98EF7D816 /* IdleMonitor.swift in Sources */,
+				91407DE15DD9823F211FFCB5 /* LaunchAtLoginService.swift in Sources */,
+				FB01FF047CFA94CFEC2A2DD6 /* MenuBarView.swift in Sources */,
+				D181BE7E581255761DF0557D /* OnboardingView.swift in Sources */,
+				E9105238CFE31127435EC906 /* SessionStore.swift in Sources */,
+				C1DDF8A5E0341AE444AFB14A /* TrackedSession.swift in Sources */,
+				7B31913DB184E427A2ECF363 /* UpdaterService.swift in Sources */,
+				4C1CCC86B61CC9004CA23800 /* VeiraApp.swift in Sources */,
+				E3AE59700BF315CD220CD3CA /* WorkDayRecord.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		27BECFE368E7463C8AF13739 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Veira.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.veira.app;
+				PRODUCT_NAME = Veira;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2C5345E710F7F69C4FE6C050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 7;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.4.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		4A812442266576408AABF317 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Veira.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.veira.app;
+				PRODUCT_NAME = Veira;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B67846B17C7BB397C2D41AB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 7;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.4.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3ABFBDD6EC7089AD75A670E8 /* Build configuration list for PBXNativeTarget "Veira" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27BECFE368E7463C8AF13739 /* Debug */,
+				4A812442266576408AABF317 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FF3CAE8B103998422D8783F0 /* Build configuration list for PBXProject "Veira" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C5345E710F7F69C4FE6C050 /* Debug */,
+				B67846B17C7BB397C2D41AB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F1B7C6B53A57E42C950843D5 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7606B64C3BC42065D285A416 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1B7C6B53A57E42C950843D5 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 475B2CE9244320E14F00EBE3 /* Project object */;
+}
