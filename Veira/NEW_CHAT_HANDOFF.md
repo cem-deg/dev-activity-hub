@@ -86,4 +86,4 @@ The product tracks active applications, session durations, idle time, and pause/
 Release-ready maintenance and scoped evolution after Developer ID signed/notarized DMG distribution.
 
 # Immediate Goal
-Finish the documentation/workflow update, then wait for approval before starting the full project audit.
+Continue approved post-release audit follow-ups with scoped, low-risk fixes. Do not start new product features without explicit approval.

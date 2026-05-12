@@ -1619,7 +1619,7 @@ private struct SettingsView: View {
 
                 // Privacy
                 SettingsSection(title: "Privacy") {
-                    Text("All activity data is stored locally on your Mac. No screenshots, keystrokes, or clipboard content are ever captured. Nothing is sent to any server.")
+                    Text("All activity data is stored locally on your Mac. No screenshots, keystrokes, or clipboard content are ever captured. Update checks contact GitHub only for release metadata and downloads.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .padding(12)

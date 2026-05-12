@@ -112,12 +112,12 @@ create-dmg \
   "Veira.dmg" \
   "Veira.app"
 
-# Oluşan DMG'yi release klasörüne taşı
-mv /tmp/VeiraRelease/Veira.dmg /EXPORT_KLASÖRÜ/Veira.dmg
+# DMG /tmp içinde kalmalı. Önce bu kopya doğrulanır ve Sparkle ile imzalanır.
+# GitHub'a yüklemek için release klasörüne kopyalama adımı 8'den sonra yapılır.
 
 ## 7) DMG içini kontrol et
 
-hdiutil attach Veira.dmg
+hdiutil attach /tmp/VeiraRelease/Veira.dmg
 
 defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleShortVersionString
 defaults read "/Volumes/Veira/Veira.app/Contents/Info" CFBundleVersion
@@ -146,17 +146,21 @@ NOT: Bu üç kontrol geçilmeden 8. adıma geçilmemelidir.
 
 ## 8) Sparkle imzası al
 
-DMG’nin olduğu klasörde:
+DMG /tmp içindeki temiz kopyadan imzalanmalı:
 
 find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -type f | head -1
 
 Çıkan path’i kullan:
 
-"ÇIKAN_PATH" Veira.dmg
+"ÇIKAN_PATH" /tmp/VeiraRelease/Veira.dmg
 
 Çıktıdan şunları sakla:
 - sparkle:edSignature
 - length
+
+GitHub'a yükleyebilmek için DMG'yi release klasörüne kopyala:
+
+cp /tmp/VeiraRelease/Veira.dmg /EXPORT_KLASÖRÜ/Veira.dmg
 
 ## 9) GitHub Release oluştur
 
@@ -169,7 +173,7 @@ Title:
 Veira v1.4.2
 
 Asset:
-Veira.dmg
+/EXPORT_KLASÖRÜ/Veira.dmg
 
 Publish release.
 
@@ -191,7 +195,7 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 ## 11) Push
 
-git add appcast.xml Veira/project.yml
+git add appcast.xml Veira/project.yml Veira/Veira.xcodeproj/project.pbxproj Veira/create-dmg-command.txt
 git commit -m "release v1.4.2"
 git push
 

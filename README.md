@@ -2,7 +2,7 @@
 
 A minimal, privacy-first macOS menu bar app for tracking how you actually spend your time.
 
-Veira shows how your time is distributed across apps, sessions, and days — without leaving your machine or inspecting your work. — by app, by session, by day — without leaving your machine or reading anything you type.
+Veira shows how your time is distributed across apps, sessions, and days — without inspecting your work or reading anything you type.
 
 ---
 
@@ -38,9 +38,10 @@ Veira is built on a simple principle: track your time, not your work.
 - No screenshots
 - No screen content capture
 - No file or clipboard access
-- No data is sent externally
+- No activity data is sent externally
 - All data is stored locally in `~/Library/Application Support/Veira/`
-- Nothing is synced, transmitted, or shared
+- No activity data is synced, transmitted, or shared
+- Update checks contact GitHub only to retrieve release metadata and downloads
 
 The only thing Veira knows is which application was in the foreground and for how long.
 
@@ -59,13 +60,13 @@ The only thing Veira knows is which application was in the foreground and for ho
 
 ## Status
 
-Veira is an early but fully functional version. Core tracking, persistence, idle detection, and the dashboard are stable. The product is actively evolving.
+Veira is a functional, released macOS app. Core tracking, persistence, idle detection, updates, and the dashboard are stable. The product is evolving through scoped, reviewable improvements.
 
 ---
 
 ## Development
 
-**Requirements:** macOS 13+, Xcode 15+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+**Requirements:** macOS 14+, Xcode 15+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 
 ```bash
 git clone https://github.com/cem-deg/dev-activity-hub.git

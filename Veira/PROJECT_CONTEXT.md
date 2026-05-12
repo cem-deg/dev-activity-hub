@@ -90,4 +90,4 @@ Privacy clarity matters more than aggressive automation.
 Release-ready maintenance and scoped evolution phase
 
 ## Immediate Objective
-Keep project rules, workflow templates, and documentation aligned with the Codex planning / Claude Code implementation process before starting the next full audit or scoped implementation task.
+Address approved post-release audit follow-ups with scoped fixes, then continue with targeted implementation work only after explicit approval.
