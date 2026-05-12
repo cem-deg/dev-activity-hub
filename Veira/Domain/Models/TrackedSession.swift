@@ -10,13 +10,19 @@ struct TrackedSession: Codable {
         segments.compactMap(\.duration).reduce(0, +)
     }
 
-    var perAppDurations: [(appName: String, duration: TimeInterval)] {
-        var totals: [String: TimeInterval] = [:]
+    var perAppDurations: [(bundleIdentifier: String, appName: String, duration: TimeInterval)] {
+        var totals: [String: (appName: String, duration: TimeInterval)] = [:]
         for segment in segments {
             guard let d = segment.duration else { continue }
-            totals[segment.appName, default: 0] += d
+            if totals[segment.bundleIdentifier] != nil {
+                totals[segment.bundleIdentifier]!.duration += d
+            } else {
+                totals[segment.bundleIdentifier] = (segment.appName, d)
+            }
         }
-        return totals.map { ($0.key, $0.value) }.sorted { $0.duration > $1.duration }
+        return totals
+            .map { (bundleIdentifier: $0.key, appName: $0.value.appName, duration: $0.value.duration) }
+            .sorted { $0.duration > $1.duration }
     }
 
     var appSummary: String {

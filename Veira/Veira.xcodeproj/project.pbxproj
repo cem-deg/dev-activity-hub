@@ -14,7 +14,6 @@
 		42A6D7E643DA0E9EEB53B48B /* DashboardWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */; };
 		4C1CCC86B61CC9004CA23800 /* VeiraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */; };
 		617EC72ADC293C67038885FA /* DurationTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587C60CD937B164EA9976373 /* DurationTextFormatter.swift */; };
-		784A14E979DB85DCF2D441E5 /* ActivityEventBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */; };
 		7B31913DB184E427A2ECF363 /* UpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06DE21D6F99AED021C8868 /* UpdaterService.swift */; };
 		7C0D72CABE9B83588D9E82FF /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 7606B64C3BC42065D285A416 /* Sparkle */; };
 		91407DE15DD9823F211FFCB5 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */; };
@@ -57,7 +56,6 @@
 		C1962FEF339B142E7A6BB68B /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
 		C8370C75EAD383EE813F47CF /* Veira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veira.entitlements; sourceTree = "<group>"; };
 		CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
-		E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEventBuffer.swift; sourceTree = "<group>"; };
 		F1D03655A4FF245B75CB31DB /* IdleMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleMonitor.swift; sourceTree = "<group>"; };
 		FDF1D662D8B008ECC0721090 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -179,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */,
-				E3338FD174EDE34E49B0E563 /* ActivityEventBuffer.swift */,
 				F1D03655A4FF245B75CB31DB /* IdleMonitor.swift */,
 			);
 			path = Tracking;
@@ -312,7 +309,6 @@
 			files = (
 				CC85E0024E228B7C31E56F63 /* ActiveAppMonitor.swift in Sources */,
 				30FF4882EF4A31A2A3233254 /* ActivityEvent.swift in Sources */,
-				784A14E979DB85DCF2D441E5 /* ActivityEventBuffer.swift in Sources */,
 				E7EEF68F0BA2883FAF025F1A /* ActivityNotifier.swift in Sources */,
 				C176104C88CB73787F1F8B85 /* ActivitySegment.swift in Sources */,
 				3D4E3E12DA79DEB007D94062 /* ActivitySegmentBuilder.swift in Sources */,

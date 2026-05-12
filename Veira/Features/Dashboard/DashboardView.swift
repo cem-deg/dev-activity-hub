@@ -224,7 +224,7 @@ private struct SessionRow: View {
                     .padding(.horizontal, 12)
                     .opacity(0.6)
                 VStack(spacing: 6) {
-                    ForEach(breakdown, id: \.appName) { entry in
+                    ForEach(breakdown, id: \.bundleIdentifier) { entry in
                         HStack {
                             Text(entry.appName)
                                 .font(.caption)
@@ -511,11 +511,11 @@ private struct TodayAppDonutChart: View {
                         angularInset: 1.5
                     )
                     .cornerRadius(3)
-                    .foregroundStyle(by: .value("App", entry.name))
+                    .foregroundStyle(by: .value("App", entry.id))
                     .opacity(hoveredEntry == nil || hoveredEntry?.id == entry.id ? 1.0 : 0.35)
                 }
                 .chartForegroundStyleScale(
-                    domain: entries.map(\.name),
+                    domain: entries.map(\.id),
                     range: Array(Self.palette.prefix(entries.count))
                 )
                 .chartLegend(.hidden)
@@ -663,17 +663,23 @@ private struct WeeklyDetailsView: View {
         summaries.reduce(0) { $0 + $1.sessionCount }
     }
 
-    private func appTotals(for date: Date) -> [(appName: String, duration: TimeInterval)] {
+    private func appTotals(for date: Date) -> [(bundleIdentifier: String, appName: String, duration: TimeInterval)] {
         guard let record = appState.recordedDays.first(where: {
             Calendar.current.isDate($0.date, inSameDayAs: date)
         }) else { return [] }
-        var totals: [String: TimeInterval] = [:]
+        var totals: [String: (appName: String, duration: TimeInterval)] = [:]
         for session in record.sessions {
             for entry in session.perAppDurations {
-                totals[entry.appName, default: 0] += entry.duration
+                if totals[entry.bundleIdentifier] != nil {
+                    totals[entry.bundleIdentifier]!.duration += entry.duration
+                } else {
+                    totals[entry.bundleIdentifier] = (entry.appName, entry.duration)
+                }
             }
         }
-        return totals.map { ($0.key, $0.value) }.sorted { $0.duration > $1.duration }
+        return totals
+            .map { (bundleIdentifier: $0.key, appName: $0.value.appName, duration: $0.value.duration) }
+            .sorted { $0.duration > $1.duration }
     }
 
     var body: some View {
@@ -771,7 +777,7 @@ private struct WeeklyDetailsView: View {
 
 private struct WeekDayRow: View {
     let summary: DaySummary
-    let appTotals: [(appName: String, duration: TimeInterval)]
+    let appTotals: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
     var onSelect: (() -> Void)? = nil
 
     private static let dayFormatter: DateFormatter = {
@@ -953,7 +959,7 @@ private struct DayDetailsView: View {
     @EnvironmentObject private var appState: AppState
 
     let summary: DaySummary
-    let appTotals: [(appName: String, duration: TimeInterval)]
+    let appTotals: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
     let onBack: () -> Void
 
     private static let dayFormatter: DateFormatter = {
@@ -1157,7 +1163,7 @@ private struct InsightCard: View {
 // MARK: - Day Donut Chart
 
 private struct DayDonutChart: View {
-    let appTotals: [(appName: String, duration: TimeInterval)]
+    let appTotals: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
     let totalDuration: TimeInterval
 
     @State private var hoveredEntry: Entry? = nil
@@ -1186,7 +1192,7 @@ private struct DayDonutChart: View {
     }
 
     private var entries: [Entry] {
-        appTotals.map { Entry(id: $0.appName, name: $0.appName, duration: $0.duration) }
+        appTotals.map { Entry(id: $0.bundleIdentifier, name: $0.appName, duration: $0.duration) }
     }
 
     var body: some View {
@@ -1200,11 +1206,11 @@ private struct DayDonutChart: View {
                         angularInset: 1.5
                     )
                     .cornerRadius(3)
-                    .foregroundStyle(by: .value("App", entry.name))
+                    .foregroundStyle(by: .value("App", entry.id))
                     .opacity(hoveredEntry == nil || hoveredEntry?.id == entry.id ? 1.0 : 0.35)
                 }
                 .chartForegroundStyleScale(
-                    domain: entries.map(\.name),
+                    domain: entries.map(\.id),
                     range: (0..<entries.count).map { Self.palette[$0 % Self.palette.count] }
                 )
                 .chartLegend(.hidden)
