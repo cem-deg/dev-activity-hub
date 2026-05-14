@@ -1,66 +1,90 @@
 # Veira
 
-A minimal, privacy-first macOS menu bar app for tracking how you actually spend your time.
+**A calm, private macOS app for understanding where your work time actually goes.**
 
-Veira shows how your time is distributed across apps, sessions, and days — without inspecting your work or reading anything you type.
+Veira sits in your menu bar and tracks how your time is distributed across applications, sessions, and days — without reading your work, inspecting your screen, or sending your activity data off your machine.
+
+---
+
+## What Veira does
+
+You start a session when you begin working. Veira observes which application is in the foreground and records how long it stays there. When you step away, it detects inactivity and pauses automatically. When you're done, you end the session.
+
+That's the full model. Veira knows two things: which app was active, and for how long.
 
 ---
 
 ## Features
 
-- **Session tracking** — start and end work sessions manually from the menu bar
-- **Active app tracking** — records which applications are in use during a session
-- **Idle detection** — automatically pauses when you go inactive; resumes on your command
-- **Live session state** — see the current session duration and top apps in real time from the menu bar
-- **Daily summary** — total time and per-app breakdown for the current day
-- **Weekly overview** — last 7 days of session history at a glance
-- **Session history** — expandable session rows with per-app time breakdowns
-- **Local persistence** — session data is saved to disk and survives app restarts
-- **Onboarding** — a short first-launch flow that explains what is and isn't tracked
+**Menu bar**
+Live session status, today's tracked time, and your top apps from the current session — available from the menu bar without opening a window.
 
----
+**Session controls**
+Start, pause, resume, and end sessions manually. Veira never begins tracking automatically on launch or login.
 
-## How It Works
+**Idle detection**
+Veira monitors for inactivity and pauses the session when you step away. A notification prompts you to resume when you return. The idle threshold and pause reminder interval are configurable in Settings.
 
-1. Click the menu bar icon and start a session
-2. Work normally — Veira records which apps are active
-3. If you step away, the session pauses automatically after a period of inactivity
-4. Resume when you return, or end the session when you're done
-5. Open the dashboard to review your day and the past week
+**Daily view**
+Today's total tracked time, a per-app usage breakdown, and an expandable session list showing exactly when you worked and what was in the foreground.
+
+**Weekly view**
+Seven days of session history with a day-by-day activity overview, session counts, and a drill-down to per-app detail for any day — including a donut chart breakdown.
+
+**Insights**
+Current streak, top app today, longest session, and most active day of the week. All computed locally from your own data.
+
+**Automatic updates**
+Veira checks for new releases and notifies you in-app. Updates are delivered as signed, notarized packages via Sparkle.
 
 ---
 
 ## Privacy
 
-Veira is built on a simple principle: track your time, not your work.
+Veira is designed around one constraint: track time, not work.
 
-- No keystroke logging
-- No screenshots
-- No screen content capture
-- No file or clipboard access
-- No activity data is sent externally
-- All data is stored locally in `~/Library/Application Support/Veira/`
-- No activity data is synced, transmitted, or shared
-- Update checks contact GitHub only to retrieve release metadata and downloads
+| What Veira records | What Veira never records |
+|---|---|
+| Application name | Window title or content |
+| Time in foreground | Keystrokes or mouse clicks |
+| Session start and end | Screenshots or screen capture |
+| Idle periods | Browser URLs, files, or clipboard |
 
-The only thing Veira knows is which application was in the foreground and for how long.
+All session data is stored locally in `~/Library/Application Support/Veira/`. Nothing is uploaded, synced, or transmitted. Update checks contact GitHub only to fetch release metadata — no usage data is included.
 
 ---
 
-## Tech Stack
+## How it works
 
-- **Swift / SwiftUI** — UI and app lifecycle
-- **AppKit** — menu bar integration, native window management
-- **Core Graphics** — idle time detection via `CGEventSource`
-- **UserNotifications** — inactivity pause notifications
-- **JSON** — local session persistence via `Codable` + `FileManager`
-- **XcodeGen** — project file generation from `project.yml`
+1. Click the Veira icon in the menu bar and press **Start Session**.
+2. Work normally. Veira records which app is in the foreground.
+3. Step away — Veira detects inactivity and pauses the session.
+4. Resume when you're back, or end the session when you're done.
+5. Open the dashboard to review today's breakdown and the past week.
 
 ---
 
-## Status
+## Installation
 
-Veira is a functional, released macOS app. Core tracking, persistence, idle detection, updates, and the dashboard are stable. The product is evolving through scoped, reviewable improvements.
+Download the latest release from [github.com/cem-deg/dev-activity-hub/releases](https://github.com/cem-deg/dev-activity-hub/releases). Open the DMG, drag Veira to your Applications folder, and launch it.
+
+**System requirement:** macOS 14 (Sonoma) or later.
+
+Veira is distributed as a Developer ID–signed and Apple-notarized application. It is not available through the Mac App Store.
+
+**Automatic updates** — Veira will notify you when a new version is available. Updates can be installed directly from the app.
+
+---
+
+## Your data
+
+Session data is stored as a single JSON file:
+
+```
+~/Library/Application Support/Veira/workdays.json
+```
+
+The file is human-readable. It never leaves your machine.
 
 ---
 
@@ -75,10 +99,18 @@ xcodegen generate
 open Veira.xcodeproj
 ```
 
+The Xcode project is generated from `Veira/project.yml` via XcodeGen. When changing project settings, update `project.yml` first, then regenerate `Veira.xcodeproj`.
+
 ---
 
-## Open Source
+## Distribution
 
-Veira is open source.
+Releases are published at [github.com/cem-deg/dev-activity-hub/releases](https://github.com/cem-deg/dev-activity-hub/releases) as notarized DMG files, signed with a Developer ID Application certificate. In-app updates are delivered through a Sparkle appcast hosted at the same repository.
+
+---
+
+## Open source
+
+Veira is open source. Contributions, issue reports, and feedback are welcome.
 
 [github.com/cem-deg/dev-activity-hub](https://github.com/cem-deg/dev-activity-hub)
