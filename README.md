@@ -66,7 +66,7 @@ All session data is stored locally in `~/Library/Application Support/Veira/`. No
 
 ## Installation
 
-Download the latest release from [github.com/cem-deg/dev-activity-hub/releases](https://github.com/cem-deg/dev-activity-hub/releases). Open the DMG, drag Veira to your Applications folder, and launch it.
+Download the latest release from [github.com/cem-deg/Veira-activity-menubar/releases](https://github.com/cem-deg/Veira-activity-menubar/releases). Open the DMG, drag Veira to your Applications folder, and launch it.
 
 **System requirement:** macOS 14 (Sonoma) or later.
 
@@ -93,7 +93,7 @@ The file is human-readable. It never leaves your machine.
 **Requirements:** macOS 14+, Xcode 15+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 
 ```bash
-git clone https://github.com/cem-deg/dev-activity-hub.git
+git clone https://github.com/cem-deg/Veira-activity-menubar.git
 cd dev-activity-hub/Veira
 xcodegen generate
 open Veira.xcodeproj
@@ -105,7 +105,7 @@ The Xcode project is generated from `Veira/project.yml` via XcodeGen. When chang
 
 ## Distribution
 
-Releases are published at [github.com/cem-deg/dev-activity-hub/releases](https://github.com/cem-deg/dev-activity-hub/releases) as notarized DMG files, signed with a Developer ID Application certificate. In-app updates are delivered through a Sparkle appcast hosted at the same repository.
+Releases are published at [github.com/cem-deg/Veira-activity-menubar/releases](https://github.com/cem-deg/Veira-activity-menubar/releases) as notarized DMG files, signed with a Developer ID Application certificate. In-app updates are delivered through a Sparkle appcast hosted at the same repository.
 
 ---
 
@@ -113,4 +113,4 @@ Releases are published at [github.com/cem-deg/dev-activity-hub/releases](https:/
 
 Veira is open source. Contributions, issue reports, and feedback are welcome.
 
-[github.com/cem-deg/dev-activity-hub](https://github.com/cem-deg/dev-activity-hub)
+[github.com/cem-deg/Veira-activity-menubar](https://github.com/cem-deg/Veira-activity-menubar)
