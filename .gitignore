@@ -1,0 +1,9 @@
+# macOS Finder metadata
+.DS_Store
+
+# Xcode user-specific workspace state
+xcuserdata/
+*.xcuserstate
+
+# Local release exports and generated DMGs
+Veira/Releases/
