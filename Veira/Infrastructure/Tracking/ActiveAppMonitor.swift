@@ -35,7 +35,6 @@ final class ActiveAppMonitor {
             timestamp: Date()
         )
         onEvent?(event)
-        print("[ActiveAppMonitor] \(event.appName) — \(event.bundleIdentifier)")
     }
 
     deinit {

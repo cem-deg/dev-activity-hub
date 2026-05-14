@@ -179,6 +179,7 @@ private struct SessionRow: View {
         let duration = session.segmentDuration
         let apps = session.appSummary
         let breakdown = session.perAppDurations
+        let hasTimeline = session.endedAt > session.startedAt && !session.segments.isEmpty
 
         VStack(spacing: 0) {
             Button {
@@ -215,37 +216,345 @@ private struct SessionRow: View {
                 }
                 .contentShape(Rectangle())
                 .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.top, 8)
+                .padding(.bottom, hasTimeline ? 6 : 8)
             }
             .buttonStyle(.plain)
+
+            if hasTimeline {
+                SessionTimelineBar(session: session)
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 9)
+            }
 
             if isExpanded && !breakdown.isEmpty {
                 Divider()
                     .padding(.horizontal, 12)
                     .opacity(0.6)
-                VStack(spacing: 6) {
-                    ForEach(breakdown, id: \.bundleIdentifier) { entry in
-                        HStack {
-                            Text(entry.appName)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Text(DurationTextFormatter.string(from: entry.duration))
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .monospacedDigit()
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding(.horizontal, 20)
-                    }
-                }
-                .padding(.vertical, 10)
+                SessionDetailPanel(session: session, breakdown: breakdown)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
             }
         }
         .background(
             RoundedRectangle(cornerRadius: 6)
                 .fill(.secondary.opacity(0.08))
         )
+    }
+}
+
+private struct SessionTimelineBar: View {
+    let session: TrackedSession
+    @State private var hoveredEntryID: Int? = nil
+
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.timeStyle = .short
+        f.dateStyle = .none
+        return f
+    }()
+
+    private struct Entry: Identifiable {
+        enum Kind {
+            case app(appName: String, bundleIdentifier: String)
+            case gap
+        }
+
+        let id: Int
+        let kind: Kind
+        let startTime: Date
+        let endTime: Date
+
+        var duration: TimeInterval {
+            endTime.timeIntervalSince(startTime)
+        }
+
+        var title: String {
+            switch kind {
+            case .app(let appName, _): return appName
+            case .gap: return "No tracked activity"
+            }
+        }
+
+        var bundleIdentifier: String? {
+            switch kind {
+            case .app(_, let bundleIdentifier): return bundleIdentifier
+            case .gap: return nil
+            }
+        }
+
+        var isGap: Bool {
+            if case .gap = kind { return true }
+            return false
+        }
+    }
+
+    private var entries: [Entry] {
+        Self.entries(for: session)
+    }
+
+    private var totalDuration: TimeInterval {
+        max(0, session.endedAt.timeIntervalSince(session.startedAt))
+    }
+
+    var body: some View {
+        let timelineEntries = entries
+        let hoveredEntry = timelineEntries.first(where: { $0.id == hoveredEntryID })
+
+        VStack(alignment: .leading, spacing: 5) {
+            GeometryReader { geo in
+                let availableWidth = max(0, geo.size.width)
+
+                ZStack(alignment: .leading) {
+                    ForEach(timelineEntries) { entry in
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Self.color(for: entry))
+                            .overlay {
+                                if entry.isGap {
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .strokeBorder(.secondary.opacity(0.14), lineWidth: 1)
+                                }
+                            }
+                            .frame(width: segmentWidth(for: entry, availableWidth: availableWidth))
+                            .offset(x: segmentOffset(for: entry, availableWidth: availableWidth))
+                            .opacity(hoveredEntryID == nil || hoveredEntryID == entry.id ? 1.0 : 0.45)
+                            .help(helpText(for: entry))
+                            .onContinuousHover { phase in
+                                switch phase {
+                                case .active:
+                                    hoveredEntryID = entry.id
+                                case .ended:
+                                    if hoveredEntryID == entry.id {
+                                        hoveredEntryID = nil
+                                    }
+                                }
+                            }
+                    }
+                }
+                .clipped()
+            }
+            .frame(height: 10)
+
+            Group {
+                if let hoveredEntry {
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(Self.color(for: hoveredEntry))
+                            .frame(width: 6, height: 6)
+                        Text(hoveredEntry.title)
+                            .lineLimit(1)
+                        Text("·")
+                            .foregroundStyle(.tertiary)
+                        Text(timeRange(for: hoveredEntry))
+                            .monospacedDigit()
+                        Spacer(minLength: 8)
+                        Text(DurationTextFormatter.string(from: hoveredEntry.duration))
+                            .monospacedDigit()
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                } else {
+                    HStack {
+                        Text(Self.timeFormatter.string(from: session.startedAt))
+                        Spacer()
+                        Text(Self.timeFormatter.string(from: session.endedAt))
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .monospacedDigit()
+                }
+            }
+            .frame(height: 14)
+        }
+    }
+
+    private func segmentWidth(for entry: Entry, availableWidth: CGFloat) -> CGFloat {
+        guard totalDuration > 0 else { return 0 }
+        let proportionalWidth = availableWidth * CGFloat(entry.duration / totalDuration)
+        return max(entry.isGap ? 1 : 2, proportionalWidth)
+    }
+
+    private func segmentOffset(for entry: Entry, availableWidth: CGFloat) -> CGFloat {
+        guard totalDuration > 0 else { return 0 }
+        let offset = entry.startTime.timeIntervalSince(session.startedAt) / totalDuration
+        return availableWidth * CGFloat(max(0, min(1, offset)))
+    }
+
+    private func timeRange(for entry: Entry) -> String {
+        "\(Self.timeFormatter.string(from: entry.startTime))-\(Self.timeFormatter.string(from: entry.endTime))"
+    }
+
+    private func helpText(for entry: Entry) -> String {
+        "\(entry.title) · \(timeRange(for: entry)) · \(DurationTextFormatter.string(from: entry.duration))"
+    }
+
+    private static func entries(for session: TrackedSession) -> [Entry] {
+        guard session.endedAt > session.startedAt else { return [] }
+
+        let sortedSegments = session.segments
+            .compactMap { segment -> ActivitySegment? in
+                guard let end = segment.endTime, end > segment.startTime else { return nil }
+                return segment
+            }
+            .sorted { $0.startTime < $1.startTime }
+
+        var result: [Entry] = []
+        var cursor = session.startedAt
+        var nextID = 0
+
+        func appendEntry(kind: Entry.Kind, start: Date, end: Date) {
+            guard end > start else { return }
+            result.append(Entry(id: nextID, kind: kind, startTime: start, endTime: end))
+            nextID += 1
+        }
+
+        for segment in sortedSegments {
+            guard let rawEnd = segment.endTime else { continue }
+            let start = max(max(segment.startTime, session.startedAt), cursor)
+            let end = min(rawEnd, session.endedAt)
+            guard end > start else { continue }
+
+            if start > cursor {
+                appendEntry(kind: .gap, start: cursor, end: start)
+            }
+
+            appendEntry(
+                kind: .app(appName: segment.appName, bundleIdentifier: segment.bundleIdentifier),
+                start: start,
+                end: end
+            )
+            cursor = max(cursor, end)
+        }
+
+        if cursor < session.endedAt {
+            appendEntry(kind: .gap, start: cursor, end: session.endedAt)
+        }
+
+        return result
+    }
+
+    private static func color(for entry: Entry) -> Color {
+        guard let bundleIdentifier = entry.bundleIdentifier else {
+            return .secondary.opacity(0.18)
+        }
+        return SessionColor.color(for: bundleIdentifier)
+    }
+}
+
+private struct SessionDetailPanel: View {
+    let session: TrackedSession
+    let breakdown: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
+
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.timeStyle = .short
+        f.dateStyle = .none
+        return f
+    }()
+
+    private var segments: [ActivitySegment] {
+        session.segments
+            .filter { segment in
+                guard let end = segment.endTime else { return false }
+                return end > segment.startTime
+            }
+            .sorted { $0.startTime < $1.startTime }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 11) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Apps")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .textCase(.uppercase)
+
+                ForEach(breakdown, id: \.bundleIdentifier) { entry in
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(SessionColor.color(for: entry.bundleIdentifier))
+                            .frame(width: 7, height: 7)
+                        Text(entry.appName)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                        Spacer()
+                        Text(DurationTextFormatter.string(from: entry.duration))
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+            if !segments.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Timeline")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                        .textCase(.uppercase)
+
+                    ForEach(Array(segments.enumerated()), id: \.offset) { _, segment in
+                        SegmentDetailRow(segment: segment, timeFormatter: Self.timeFormatter)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct SegmentDetailRow: View {
+    let segment: ActivitySegment
+    let timeFormatter: DateFormatter
+
+    var body: some View {
+        HStack(spacing: 8) {
+            RoundedRectangle(cornerRadius: 2)
+                .fill(SessionColor.color(for: segment.bundleIdentifier))
+                .frame(width: 4, height: 18)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(segment.appName)
+                    .font(.caption)
+                    .lineLimit(1)
+                if let endTime = segment.endTime {
+                    Text("\(timeFormatter.string(from: segment.startTime))-\(timeFormatter.string(from: endTime))")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                        .monospacedDigit()
+                }
+            }
+            Spacer()
+            if let duration = segment.duration {
+                Text(DurationTextFormatter.string(from: duration))
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private enum SessionColor {
+    private static let palette: [Color] = [
+        .blue.opacity(0.76),
+        .orange.opacity(0.74),
+        .teal.opacity(0.74),
+        .purple.opacity(0.72),
+        .green.opacity(0.70),
+        .pink.opacity(0.70),
+        .indigo.opacity(0.72),
+        .mint.opacity(0.72),
+        .yellow.opacity(0.68)
+    ]
+
+    static func color(for key: String) -> Color {
+        let hash = key.unicodeScalars.reduce(0) { partial, scalar in
+            partial &* 31 &+ Int(scalar.value)
+        }
+        let index = Int(hash.magnitude % UInt(palette.count))
+        return palette[index]
     }
 }
 

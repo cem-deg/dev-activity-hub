@@ -65,10 +65,11 @@ final class AppState: ObservableObject {
 
     init() {
         monitor.onEvent = { [weak self] event in
-            self?.segmentBuilder.handle(event)
-            self?.openSegmentAppName = event.appName
-            self?.openSegmentBundleId = event.bundleIdentifier
-            self?.openSegmentStartTime = event.timestamp
+            guard let self else { return }
+            guard segmentBuilder.handle(event) else { return }
+            openSegmentAppName = event.appName
+            openSegmentBundleId = event.bundleIdentifier
+            openSegmentStartTime = event.timestamp
         }
         idleMonitor.onIdleStarted = { [weak self] lastActivityAt in self?.idlePause(lastActivityAt: lastActivityAt) }
         idleMonitor.onIdleEnded   = { [weak self] in self?.handleIdleEnded() }

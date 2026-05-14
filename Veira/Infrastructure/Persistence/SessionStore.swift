@@ -43,11 +43,8 @@ enum SessionStore {
         guard let data = try? Data(contentsOf: url) else { return [] }
 
         do {
-            return try JSONDecoder().decode([WorkDayRecord].self, from: data).map { record in
-                var r = record
-                r.sessions = deduplicated(record.sessions)
-                return r
-            }
+            let records = try JSONDecoder().decode([WorkDayRecord].self, from: data)
+            return normalized(records)
         } catch {
             print("[SessionStore] Failed to decode workdays.json: \(error)")
             // Preserve the unreadable file before returning an empty list.
@@ -56,6 +53,26 @@ enum SessionStore {
             try? FileManager.default.removeItem(at: backupURL)
             try? FileManager.default.copyItem(at: url, to: backupURL)
             return []
+        }
+    }
+
+    private static func normalized(_ records: [WorkDayRecord]) -> [WorkDayRecord] {
+        var sessionsByDate: [Date: [TrackedSession]] = [:]
+        var orderedDates: [Date] = []
+        let calendar = Calendar.current
+
+        for record in records {
+            let dayKey = calendar.startOfDay(for: record.date)
+            if sessionsByDate[dayKey] == nil {
+                orderedDates.append(dayKey)
+                sessionsByDate[dayKey] = []
+            }
+            sessionsByDate[dayKey, default: []].append(contentsOf: record.sessions)
+        }
+
+        return orderedDates.compactMap { date in
+            guard let sessions = sessionsByDate[date] else { return nil }
+            return WorkDayRecord(date: date, sessions: deduplicated(sessions))
         }
     }
 

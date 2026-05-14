@@ -4,8 +4,8 @@
 
 Veira/project.yml içinde:
 
-MARKETING_VERSION: "1.4.2"
-CURRENT_PROJECT_VERSION: "8"
+MARKETING_VERSION: "1.4.3"
+CURRENT_PROJECT_VERSION: "9"
 
 Kural:
 - MARKETING_VERSION kullanıcıya görünen sürüm
@@ -28,7 +28,7 @@ Product → Archive
 
 Archive ekranında solda version/build doğru görünmeli:
 
-1.4.2 (8)
+1.4.3 (9)
 
 ## 4) Export al
 
@@ -158,22 +158,23 @@ find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -ty
 - sparkle:edSignature
 - length
 
-GitHub'a yükleyebilmek için DMG'yi release klasörüne kopyala:
+GitHub'a yükleyebilmek için DMG'yi ilgili versioned release klasörüne kopyala:
 
-cp /tmp/VeiraRelease/Veira.dmg /EXPORT_KLASÖRÜ/Veira.dmg
+mkdir -p Veira/Releases/Veira_V1.4.3
+cp /tmp/VeiraRelease/Veira.dmg Veira/Releases/Veira_V1.4.3/Veira.dmg
 
 ## 9) GitHub Release oluştur
 
 GitHub → Releases → Draft new release
 
 Tag:
-v1.4.2
+v1.4.3
 
 Title:
-Veira v1.4.2
+Veira v1.4.3
 
 Asset:
-/EXPORT_KLASÖRÜ/Veira.dmg
+Veira/Releases/Veira_V1.4.3/Veira.dmg
 
 Publish release.
 
@@ -182,12 +183,12 @@ Publish release.
 Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 <item>
-  <title>Veira 1.4.2</title>
-  <sparkle:version>8</sparkle:version>
-  <sparkle:shortVersionString>1.4.2</sparkle:shortVersionString>
+  <title>Veira 1.4.3</title>
+  <sparkle:version>9</sparkle:version>
+  <sparkle:shortVersionString>1.4.3</sparkle:shortVersionString>
   <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
   <enclosure
-    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.2/Veira.dmg"
+    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.3/Veira.dmg"
     sparkle:edSignature="BURAYA_SIGNATURE"
     length="BURAYA_LENGTH"
     type="application/octet-stream"/>
@@ -195,8 +196,9 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 ## 11) Push
 
-git add appcast.xml Veira/project.yml Veira/Veira.xcodeproj/project.pbxproj Veira/create-dmg-command.txt
-git commit -m "release v1.4.2"
+git add appcast.xml Veira/project.yml Veira/Veira.xcodeproj/project.pbxproj Veira/create-dmg-command.txt Veira/App/Info.plist
+# Ayrıca bu release'e ait değişen source/config dosyalarını da ekle.
+git commit -m "release v1.4.3"
 git push
 
 ## 12) Final test
@@ -209,4 +211,4 @@ Beklenen:
 - yeni sürüm bulunur
 - indirir
 - relaunch eder
-- Settings/About kısmında Version 1.4.2 (8) görünür
+- Settings/About kısmında Version 1.4.3 (9) görünür

@@ -82,7 +82,8 @@ private final class AppcastParser: NSObject, XMLParserDelegate {
     // Per-item accumulation state, reset on each <item> open.
     private var itemBuild: String? = nil
     private var itemShortVersion: String? = nil
-    private var currentElement = ""
+    private var enclosureBuild: String? = nil
+    private var enclosureShortVersion: String? = nil
     private var capturedText = ""
 
     init(data: Data) {
@@ -99,25 +100,19 @@ private final class AppcastParser: NSObject, XMLParserDelegate {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-        currentElement = elementName
         capturedText = ""
 
         switch elementName {
         case "item":
             itemBuild = nil
             itemShortVersion = nil
+            enclosureBuild = nil
+            enclosureShortVersion = nil
         case "enclosure":
             // Item-level elements take priority; fall back to enclosure attributes.
-            let buildString = itemBuild ?? attributeDict["sparkle:version"]
-            let shortVersion = itemShortVersion ?? attributeDict["sparkle:shortVersionString"]
-            guard
-                let buildString,
-                let build = Int(buildString),
-                build > bestBuild
-            else { return }
-            bestBuild = build
-            latestBuildNumber = buildString
-            latestShortVersion = shortVersion
+            enclosureBuild = attributeDict["sparkle:version"]
+            enclosureShortVersion = attributeDict["sparkle:shortVersionString"]
+            considerLatest(buildString: itemBuild ?? enclosureBuild, shortVersion: itemShortVersion ?? enclosureShortVersion)
         default:
             break
         }
@@ -139,9 +134,22 @@ private final class AppcastParser: NSObject, XMLParserDelegate {
             itemBuild = text.isEmpty ? nil : text
         case "sparkle:shortVersionString":
             itemShortVersion = text.isEmpty ? nil : text
+        case "item":
+            considerLatest(buildString: itemBuild ?? enclosureBuild, shortVersion: itemShortVersion ?? enclosureShortVersion)
         default:
             break
         }
         capturedText = ""
+    }
+
+    private func considerLatest(buildString: String?, shortVersion: String?) {
+        guard
+            let buildString,
+            let build = Int(buildString),
+            build > bestBuild
+        else { return }
+        bestBuild = build
+        latestBuildNumber = buildString
+        latestShortVersion = shortVersion
     }
 }

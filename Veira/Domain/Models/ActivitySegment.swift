@@ -8,6 +8,7 @@ struct ActivitySegment: Codable {
 
     var duration: TimeInterval? {
         guard let end = endTime else { return nil }
+        guard end > startTime else { return nil }
         return end.timeIntervalSince(startTime)
     }
 }
