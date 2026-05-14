@@ -5,10 +5,8 @@ final class DashboardWindowController: NSObject, ObservableObject, NSWindowDeleg
     private var window: NSWindow?
 
     func open(appState: AppState, updaterService: UpdaterService) {
-        NSApplication.shared.activate(ignoringOtherApps: true)
-
         if let existing = window {
-            existing.makeKeyAndOrderFront(nil)
+            bringToFront(existing)
             return
         }
 
@@ -26,12 +24,26 @@ final class DashboardWindowController: NSObject, ObservableObject, NSWindowDeleg
                 .environmentObject(updaterService)
         )
         newWindow.delegate = self
-        newWindow.makeKeyAndOrderFront(nil)
         window = newWindow
+        bringToFront(newWindow)
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         sender.orderOut(nil)
         return false
+    }
+
+    private func bringToFront(_ window: NSWindow) {
+        window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
+        NSApplication.shared.activate(ignoringOtherApps: true)
+
+        // MenuBarExtra closes after the button action returns; reassert focus on
+        // the next run loop so the dashboard is not left behind the previous app.
+        DispatchQueue.main.async {
+            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
+            NSApplication.shared.activate(ignoringOtherApps: true)
+        }
     }
 }
