@@ -52,23 +52,10 @@ struct MenuBarView: View {
     @ViewBuilder
     private var todayDurationText: some View {
         switch appState.sessionState {
-        case .active:
-            if let runStart = appState.sessionActiveRunStartedAt {
-                let elapsed = appState.liveClockTick.timeIntervalSince(runStart)
-                let total = appState.todayTotalDuration + appState.sessionAccumulatedDuration + elapsed
-                Text(DurationTextFormatter.string(from: total))
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .monospacedDigit()
-            } else {
-                let total = appState.todayTotalDuration + appState.sessionAccumulatedDuration
-                Text(DurationTextFormatter.string(from: total))
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .monospacedDigit()
-            }
-        case .paused, .pausedDueToInactivity:
-            let total = appState.todayTotalDuration + appState.sessionAccumulatedDuration
+        case .active, .paused, .pausedDueToInactivity:
+            // currentSessionTodayDuration clips the in-progress session to today's calendar day,
+            // so a session that started before midnight contributes only its post-midnight portion.
+            let total = appState.todayTotalDuration + appState.currentSessionTodayDuration
             Text(DurationTextFormatter.string(from: total))
                 .font(.title2)
                 .fontWeight(.semibold)

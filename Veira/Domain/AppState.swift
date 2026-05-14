@@ -109,6 +109,37 @@ final class AppState: ObservableObject {
         accumulatedSessionDuration
     }
 
+    // The portion of the current in-progress session that falls within today's calendar day.
+    // Clamps each closed segment and the open segment to [todayStart, todayEnd).
+    // Used by the menu bar Today display so cross-midnight sessions don't inflate today's number.
+    var currentSessionTodayDuration: TimeInterval {
+        guard sessionState != .idle else { return 0 }
+        let calendar = Calendar.current
+        let todayStart = calendar.startOfDay(for: Date())
+        guard let todayEnd = calendar.date(byAdding: .day, value: 1, to: todayStart) else { return 0 }
+
+        var total: TimeInterval = 0
+
+        for segment in segmentBuilder.closedSegments {
+            guard let end = segment.endTime else { continue }
+            let clampedStart = max(segment.startTime, todayStart)
+            let clampedEnd   = min(end, todayEnd)
+            if clampedEnd > clampedStart {
+                total += clampedEnd.timeIntervalSince(clampedStart)
+            }
+        }
+
+        if sessionState == .active, let openStart = openSegmentStartTime {
+            let clampedStart = max(openStart, todayStart)
+            let clampedEnd   = min(liveClockTick, todayEnd)
+            if clampedEnd > clampedStart {
+                total += clampedEnd.timeIntervalSince(clampedStart)
+            }
+        }
+
+        return total
+    }
+
     var todayTotalDuration: TimeInterval {
         guard let record = todayRecord else { return 0 }
         return record.sessions.flatMap(\.segments).compactMap(\.duration).reduce(0, +)
@@ -264,11 +295,12 @@ final class AppState: ObservableObject {
                 segments: segmentBuilder.drainSegments()
             )
 
-            let dayKey = Calendar.current.startOfDay(for: startedAt)
-            if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {
-                workDays[idx].sessions.append(session)
-            } else {
-                workDays.append(WorkDayRecord(date: dayKey, sessions: [session]))
+            for (dayKey, slice) in splitSessionByDay(session) {
+                if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {
+                    workDays[idx].sessions.append(slice)
+                } else {
+                    workDays.append(WorkDayRecord(date: dayKey, sessions: [slice]))
+                }
             }
 
             // Clear so a second call to prepareForQuit skips this block.
@@ -444,6 +476,53 @@ final class AppState: ObservableObject {
         autosaveTimer = nil
     }
 
+    // Splits a TrackedSession into per-calendar-day slices.
+    // Each ActivitySegment is cut at local midnight boundaries; the resulting sub-segments
+    // are grouped by startOfDay. One TrackedSession per day is returned, sharing the
+    // original session id so autosave upserts work correctly across saves.
+    // If the session has no segments with a valid endTime, the original session is returned
+    // under startedAt's day (preserves prior behaviour for zero-activity sessions).
+    private func splitSessionByDay(_ session: TrackedSession) -> [(date: Date, session: TrackedSession)] {
+        let calendar = Calendar.current
+        var daySegments: [Date: [ActivitySegment]] = [:]
+
+        for segment in session.segments {
+            guard let endTime = segment.endTime, endTime > segment.startTime else { continue }
+            var cursor = segment.startTime
+            while cursor < endTime {
+                let dayKey = calendar.startOfDay(for: cursor)
+                guard let nextDay = calendar.date(byAdding: .day, value: 1, to: dayKey),
+                      nextDay > cursor else { break }
+                let sliceEnd = min(endTime, nextDay)
+                daySegments[dayKey, default: []].append(ActivitySegment(
+                    appName: segment.appName,
+                    bundleIdentifier: segment.bundleIdentifier,
+                    startTime: cursor,
+                    endTime: sliceEnd
+                ))
+                if sliceEnd >= endTime { break }
+                cursor = nextDay
+            }
+        }
+
+        guard !daySegments.isEmpty else {
+            let dayKey = calendar.startOfDay(for: session.startedAt)
+            return [(date: dayKey, session: session)]
+        }
+
+        return daySegments.map { dayKey, slices in
+            let sorted = slices.sorted { $0.startTime < $1.startTime }
+            let sliceStart   = sorted.first?.startTime ?? dayKey
+            let sliceEnd     = sorted.compactMap(\.endTime).last ?? sliceStart
+            return (date: dayKey, session: TrackedSession(
+                id: session.id,
+                startedAt: sliceStart,
+                endedAt: sliceEnd,
+                segments: sorted
+            ))
+        }.sorted { $0.date < $1.date }
+    }
+
     private func performAutosave() {
         guard let startedAt = sessionStartedAt,
               let sessionId = currentSessionId else { return }
@@ -456,16 +535,17 @@ final class AppState: ObservableObject {
             segments: segmentBuilder.snapshotSegments(at: now)
         )
 
-        let dayKey = Calendar.current.startOfDay(for: startedAt)
         var snapshot = workDays
-        if let idx = snapshot.firstIndex(where: { $0.date == dayKey }) {
-            if let existing = snapshot[idx].sessions.firstIndex(where: { $0.id == sessionId }) {
-                snapshot[idx].sessions[existing] = partial
+        for (dayKey, slice) in splitSessionByDay(partial) {
+            if let idx = snapshot.firstIndex(where: { $0.date == dayKey }) {
+                if let existing = snapshot[idx].sessions.firstIndex(where: { $0.id == sessionId }) {
+                    snapshot[idx].sessions[existing] = slice
+                } else {
+                    snapshot[idx].sessions.append(slice)
+                }
             } else {
-                snapshot[idx].sessions.append(partial)
+                snapshot.append(WorkDayRecord(date: dayKey, sessions: [slice]))
             }
-        } else {
-            snapshot.append(WorkDayRecord(date: dayKey, sessions: [partial]))
         }
 
         SessionStore.saveAsync(snapshot)
@@ -481,11 +561,12 @@ final class AppState: ObservableObject {
             segments: segmentBuilder.drainSegments()
         )
 
-        let dayKey = Calendar.current.startOfDay(for: startedAt)
-        if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {
-            workDays[idx].sessions.append(session)
-        } else {
-            workDays.append(WorkDayRecord(date: dayKey, sessions: [session]))
+        for (dayKey, slice) in splitSessionByDay(session) {
+            if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {
+                workDays[idx].sessions.append(slice)
+            } else {
+                workDays.append(WorkDayRecord(date: dayKey, sessions: [slice]))
+            }
         }
 
         sessionStartedAt = nil

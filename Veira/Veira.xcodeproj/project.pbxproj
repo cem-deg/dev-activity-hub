@@ -39,7 +39,7 @@
 		221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTotal.swift; sourceTree = "<group>"; };
 		2464F6EB25635BE16F551ED7 /* ActivitySegmentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegmentBuilder.swift; sourceTree = "<group>"; };
 		2CC88B12856033A41894131D /* ActivitySegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegment.swift; sourceTree = "<group>"; };
-		3A37D0019F91CF8942C16A47 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		3A37D0019F91CF8942C16A47 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		4B606FB93E032D47A107D538 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindowController.swift; sourceTree = "<group>"; };
 		579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMonitor.swift; sourceTree = "<group>"; };
@@ -52,7 +52,7 @@
 		8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VeiraApp.swift; sourceTree = "<group>"; };
 		8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
 		9522AC2E97D505A9926649F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		95F59C53E1C80F915F3A4961 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		95F59C53E1C80F915F3A4961 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		C1962FEF339B142E7A6BB68B /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
 		C8370C75EAD383EE813F47CF /* Veira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veira.entitlements; sourceTree = "<group>"; };
 		CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
@@ -340,9 +340,12 @@
 				CODE_SIGN_ENTITLEMENTS = App/Veira.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = QU6DQ2C5VB;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Veira;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -426,9 +429,12 @@
 				CODE_SIGN_ENTITLEMENTS = App/Veira.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = QU6DQ2C5VB;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Veira;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
