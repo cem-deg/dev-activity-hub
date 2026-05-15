@@ -94,7 +94,7 @@ The file is human-readable. It never leaves your machine.
 
 ```bash
 git clone https://github.com/cem-deg/Veira-activity-menubar.git
-cd dev-activity-hub/Veira
+cd Veira-activity-menubar/Veira
 xcodegen generate
 open Veira.xcodeproj
 ```

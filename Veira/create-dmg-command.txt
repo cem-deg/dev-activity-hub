@@ -188,7 +188,7 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
   <sparkle:shortVersionString>1.4.3</sparkle:shortVersionString>
   <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
   <enclosure
-    url="https://github.com/cem-deg/dev-activity-hub/releases/download/v1.4.3/Veira.dmg"
+    url="https://github.com/cem-deg/Veira-activity-menubar/releases/download/v1.4.3/Veira.dmg"
     sparkle:edSignature="BURAYA_SIGNATURE"
     length="BURAYA_LENGTH"
     type="application/octet-stream"/>
