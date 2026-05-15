@@ -4,6 +4,18 @@
     <title>Veira Updates</title>
 
     <item>
+      <title>Veira 1.5.0</title>
+      <sparkle:version>10</sparkle:version>
+      <sparkle:shortVersionString>1.5.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/cem-deg/Veira-activity-menubar/releases/download/v1.5.0/Veira.dmg"
+        sparkle:edSignature="63gSL1sn2Syhef2DS8HNywVmqdJdkLJRHZQNwnMhkfMKnA5fj/fnJLEHSsgvvYqb6M39RznSBJ2sbT3/gD4nBQ=="
+        length="2143749"
+        type="application/octet-stream"/>
+    </item>
+
+    <item>
       <title>Veira 1.4.3</title>
       <sparkle:version>9</sparkle:version>
       <sparkle:shortVersionString>1.4.3</sparkle:shortVersionString>

@@ -6,20 +6,70 @@ struct DashboardView: View {
     @EnvironmentObject private var updaterService: UpdaterService
     @State private var isShowingWeeklyDetails = false
     @State private var isShowingSettings = false
+    @State private var isShowingDeskTimer = false
+    @State private var renamingSession: TrackedSession?
+    @State private var renameText = ""
 
     var body: some View {
-        if isShowingSettings {
+        ZStack {
+            dashboardContent
+                .disabled(renamingSession != nil)
+
+            if let renamingSession {
+                RenameSessionDialog(
+                    session: renamingSession,
+                    title: $renameText,
+                    onCancel: cancelRename,
+                    onDone: commitRename
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.98)))
+            }
+        }
+        .animation(.easeInOut(duration: 0.15), value: renamingSession?.id)
+        .onAppear {
+            // Auto-show desk timer when dashboard is opened during an active desk session.
+            if appState.activeSessionMode == .focus && appState.sessionState != .idle {
+                isShowingDeskTimer = true
+            }
+        }
+        .onChange(of: appState.sessionState) { oldState, newState in
+            if newState == .idle {
+                isShowingDeskTimer = false
+            } else if oldState == .idle && appState.activeSessionMode == .focus {
+                // Handles starting a desk session while the dashboard window already exists.
+                isShowingDeskTimer = true
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var dashboardContent: some View {
+        if isShowingDeskTimer {
+            DeskTimerView(onBack: { isShowingDeskTimer = false })
+        } else if isShowingSettings {
             SettingsView(onBack: { isShowingSettings = false })
         } else if isShowingWeeklyDetails {
-            WeeklyDetailsView(isShowing: $isShowingWeeklyDetails)
-                .environmentObject(appState)
+            WeeklyDetailsView(
+                isShowing: $isShowingWeeklyDetails,
+                onRenameSession: beginRename
+            )
+            .environmentObject(appState)
         } else {
             mainDashboard
         }
     }
 
     private var mainDashboard: some View {
-        ScrollView {
+        VStack(spacing: 0) {
+            // Sticky desk session banner — lives outside the ScrollView so it stays
+            // pinned at the top while the dashboard content scrolls underneath.
+            if appState.activeSessionMode == .focus && appState.sessionState != .idle {
+                DeskSessionBanner { isShowingDeskTimer = true }
+                    .padding(.horizontal, 32)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+            }
+            ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
                     let streak = appState.currentStreakDays
@@ -52,16 +102,130 @@ struct DashboardView: View {
                     .buttonStyle(.plain)
                 }
                 SessionStatusCard()
-                TodaySummarySection()
+                TodaySummarySection(onRenameSession: beginRename)
                 QuickInsightsSection()
                 AppBreakdownSection()
                 WeeklySummarySection(isShowingWeeklyDetails: $isShowingWeeklyDetails)
             }
             .padding(32)
-        }
+            } // ScrollView
+        } // outer VStack
         .frame(minWidth: 640, minHeight: 480)
     }
 
+    private func beginRename(_ session: TrackedSession) {
+        renameText = session.title ?? session.displayTitle
+        renamingSession = session
+    }
+
+    private func cancelRename() {
+        renamingSession = nil
+        renameText = ""
+    }
+
+    private func commitRename() {
+        let trimmed = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let renamingSession, !trimmed.isEmpty {
+            appState.renameSession(id: renamingSession.id, newTitle: trimmed)
+        }
+        cancelRename()
+    }
+}
+
+// MARK: - Rename Session Dialog
+
+private struct RenameSessionDialog: View {
+    let session: TrackedSession
+    @Binding var title: String
+    let onCancel: () -> Void
+    let onDone: () -> Void
+    @FocusState private var isTitleFocused: Bool
+
+    private var canSave: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.32)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onCancel)
+
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Rename Desk Session")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    Text("Update the label shown in your session history.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                TextField("Session title", text: $title)
+                    .textFieldStyle(.plain)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 11)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(.secondary.opacity(0.10))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.secondary.opacity(0.18), lineWidth: 1)
+                    )
+                    .focused($isTitleFocused)
+                    .onSubmit {
+                        if canSave {
+                            onDone()
+                        }
+                    }
+
+                HStack(spacing: 8) {
+                    Spacer()
+                    Button("Cancel", action: onCancel)
+                        .buttonStyle(.plain)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(.secondary.opacity(0.10))
+                        )
+                    Button("Done", action: onDone)
+                        .buttonStyle(.plain)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 7)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(canSave ? Color.accentColor : Color.secondary.opacity(0.18))
+                        )
+                        .disabled(!canSave)
+                }
+            }
+            .padding(20)
+            .frame(width: 360)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.regularMaterial)
+                    .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 14)
+            )
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            if title.isEmpty {
+                title = session.title ?? session.displayTitle
+            }
+            isTitleFocused = true
+        }
+    }
 }
 
 // MARK: - Today Summary
@@ -69,6 +233,7 @@ struct DashboardView: View {
 private struct TodaySummarySection: View {
     @EnvironmentObject private var appState: AppState
     @State private var showAllSessions = false
+    let onRenameSession: (TrackedSession) -> Void
 
     private static let defaultSessionLimit = 1
 
@@ -140,7 +305,7 @@ private struct TodaySummarySection: View {
 
         return VStack(spacing: 6) {
             ForEach(visible, id: \.id) { session in
-                SessionRow(session: session)
+                SessionRow(session: session, onRename: onRenameSession)
             }
             if needsToggle {
                 Button {
@@ -164,6 +329,7 @@ private struct TodaySummarySection: View {
 
 private struct SessionRow: View {
     let session: TrackedSession
+    let onRename: (TrackedSession) -> Void
     @State private var isExpanded = false
 
     private static let timeFormatter: DateFormatter = {
@@ -174,14 +340,84 @@ private struct SessionRow: View {
     }()
 
     var body: some View {
+        if session.isFocusSession {
+            focusRow
+        } else {
+            appTrackingRow
+        }
+    }
+
+    // MARK: Desk session row
+
+    private var focusRow: some View {
         let start = Self.timeFormatter.string(from: session.startedAt)
-        let end = Self.timeFormatter.string(from: session.endedAt)
+        let end   = Self.timeFormatter.string(from: session.endedAt)
+        let duration = session.segmentDuration
+
+        return VStack(spacing: 0) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Desk")
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
+                        .kerning(0.3)
+                    Text(session.displayTitle)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text("\(start) – \(end)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 6) {
+                    Text(DurationTextFormatter.string(from: duration))
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .monospacedDigit()
+                    Button {
+                        onRename(session)
+                    } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: "pencil")
+                                .font(.caption2)
+                            Text("Rename")
+                                .font(.caption2)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(.secondary.opacity(0.10))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .help("Rename desk session")
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(.secondary.opacity(0.08))
+        )
+    }
+
+    // MARK: App tracking session row (existing behavior)
+
+    private var appTrackingRow: some View {
+        let start = Self.timeFormatter.string(from: session.startedAt)
+        let end   = Self.timeFormatter.string(from: session.endedAt)
         let duration = session.segmentDuration
         let apps = session.appSummary
         let breakdown = session.perAppDurations
         let hasTimeline = session.endedAt > session.startedAt && !session.segments.isEmpty
 
-        VStack(spacing: 0) {
+        return VStack(spacing: 0) {
             Button {
                 withAnimation(.easeInOut(duration: 0.15)) {
                     isExpanded.toggle()
@@ -294,46 +530,47 @@ private struct SessionTimelineBar: View {
     }
 
     private var totalDuration: TimeInterval {
-        max(0, session.endedAt.timeIntervalSince(session.startedAt))
+        entries.reduce(0) { $0 + $1.duration }
     }
 
     var body: some View {
         let timelineEntries = entries
+        let total = totalDuration
         let hoveredEntry = timelineEntries.first(where: { $0.id == hoveredEntryID })
 
         VStack(alignment: .leading, spacing: 5) {
-            GeometryReader { geo in
-                let availableWidth = max(0, geo.size.width)
-
-                ZStack(alignment: .leading) {
-                    ForEach(timelineEntries) { entry in
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(Self.color(for: entry))
-                            .overlay {
-                                if entry.isGap {
-                                    RoundedRectangle(cornerRadius: 2)
-                                        .strokeBorder(.secondary.opacity(0.14), lineWidth: 1)
-                                }
-                            }
-                            .frame(width: segmentWidth(for: entry, availableWidth: availableWidth))
-                            .offset(x: segmentOffset(for: entry, availableWidth: availableWidth))
-                            .opacity(hoveredEntryID == nil || hoveredEntryID == entry.id ? 1.0 : 0.45)
-                            .help(helpText(for: entry))
-                            .onContinuousHover { phase in
-                                switch phase {
-                                case .active:
-                                    hoveredEntryID = entry.id
-                                case .ended:
-                                    if hoveredEntryID == entry.id {
-                                        hoveredEntryID = nil
+            // Only render the bar when there is tracked time to show.
+            if total > 0 && !timelineEntries.isEmpty {
+                GeometryReader { geo in
+                    let availableWidth = max(0, geo.size.width)
+                    // HStack(spacing:0) with Rectangle segments tiles the full bar width.
+                    // Using Rectangle (not RoundedRectangle) for each segment prevents
+                    // rounded/oval ends at internal app boundaries. The outer clipShape
+                    // rounds only the two outer corners of the whole bar.
+                    HStack(spacing: 0) {
+                        ForEach(timelineEntries) { entry in
+                            let w = availableWidth * CGFloat(entry.duration / total)
+                            Rectangle()
+                                .fill(Self.color(for: entry))
+                                .frame(width: max(0, w))
+                                .opacity(hoveredEntryID == nil || hoveredEntryID == entry.id ? 1.0 : 0.45)
+                                .help(helpText(for: entry))
+                                .onContinuousHover { phase in
+                                    switch phase {
+                                    case .active:
+                                        hoveredEntryID = entry.id
+                                    case .ended:
+                                        if hoveredEntryID == entry.id {
+                                            hoveredEntryID = nil
+                                        }
                                     }
                                 }
-                            }
+                        }
                     }
+                    .clipShape(RoundedRectangle(cornerRadius: 2))
                 }
-                .clipped()
+                .frame(height: 10)
             }
-            .frame(height: 10)
 
             Group {
                 if let hoveredEntry {
@@ -368,18 +605,6 @@ private struct SessionTimelineBar: View {
         }
     }
 
-    private func segmentWidth(for entry: Entry, availableWidth: CGFloat) -> CGFloat {
-        guard totalDuration > 0 else { return 0 }
-        let proportionalWidth = availableWidth * CGFloat(entry.duration / totalDuration)
-        return max(entry.isGap ? 1 : 2, proportionalWidth)
-    }
-
-    private func segmentOffset(for entry: Entry, availableWidth: CGFloat) -> CGFloat {
-        guard totalDuration > 0 else { return 0 }
-        let offset = entry.startTime.timeIntervalSince(session.startedAt) / totalDuration
-        return availableWidth * CGFloat(max(0, min(1, offset)))
-    }
-
     private func timeRange(for entry: Entry) -> String {
         "\(Self.timeFormatter.string(from: entry.startTime))-\(Self.timeFormatter.string(from: entry.endTime))"
     }
@@ -399,35 +624,30 @@ private struct SessionTimelineBar: View {
             .sorted { $0.startTime < $1.startTime }
 
         var result: [Entry] = []
-        var cursor = session.startedAt
         var nextID = 0
 
         func appendEntry(kind: Entry.Kind, start: Date, end: Date) {
             guard end > start else { return }
-            result.append(Entry(id: nextID, kind: kind, startTime: start, endTime: end))
+            result.append(Entry(
+                id: nextID,
+                kind: kind,
+                startTime: start,
+                endTime: end
+            ))
             nextID += 1
         }
 
         for segment in sortedSegments {
             guard let rawEnd = segment.endTime else { continue }
-            let start = max(max(segment.startTime, session.startedAt), cursor)
+            let start = max(segment.startTime, session.startedAt)
             let end = min(rawEnd, session.endedAt)
             guard end > start else { continue }
-
-            if start > cursor {
-                appendEntry(kind: .gap, start: cursor, end: start)
-            }
 
             appendEntry(
                 kind: .app(appName: segment.appName, bundleIdentifier: segment.bundleIdentifier),
                 start: start,
                 end: end
             )
-            cursor = max(cursor, end)
-        }
-
-        if cursor < session.endedAt {
-            appendEntry(kind: .gap, start: cursor, end: session.endedAt)
         }
 
         return result
@@ -562,6 +782,8 @@ private enum SessionColor {
 
 private struct SessionStatusCard: View {
     @EnvironmentObject private var appState: AppState
+    @State private var showDeskTitleEntry = false
+    @State private var deskTitleText = ""
 
     var body: some View {
         HStack(spacing: 10) {
@@ -589,6 +811,18 @@ private struct SessionStatusCard: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(.secondary.opacity(0.12))
         )
+        .onChange(of: appState.sessionState) { _, newState in
+            if newState != .idle {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            }
+        }
+        .onChange(of: appState.selectedStartMode) { _, newMode in
+            if newMode != .focus {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            }
+        }
     }
 
     private var sessionDurationText: String? {
@@ -609,16 +843,11 @@ private struct SessionStatusCard: View {
     private var sessionControls: some View {
         switch appState.sessionState {
         case .idle:
-            Button { appState.startSession() } label: {
-                Text("Start")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+            if showDeskTitleEntry {
+                deskTitleEntryControls
+            } else {
+                idleStartControls
             }
-            .buttonStyle(.plain)
         case .active:
             HStack(spacing: 6) {
                 Button { appState.pauseSession() } label: {
@@ -666,6 +895,108 @@ private struct SessionStatusCard: View {
                 .buttonStyle(.plain)
             }
         }
+    }
+
+    private var idleStartControls: some View {
+        VStack(alignment: .trailing, spacing: 8) {
+            modeSelector
+            Button { handleStartTap() } label: {
+                Text("Start Session")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    private var modeSelector: some View {
+        HStack(spacing: 1) {
+            modeTab("Computer", for: .appTracking)
+            modeTab("Desk", for: .focus)
+        }
+        .padding(3)
+        .frame(width: 188)
+        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+    }
+
+    private func modeTab(_ label: String, for mode: SessionMode) -> some View {
+        Button { appState.selectedStartMode = mode } label: {
+            Text(label)
+                .font(.caption)
+                .fontWeight(appState.selectedStartMode == mode ? .semibold : .regular)
+                .foregroundStyle(appState.selectedStartMode == mode ? .primary : .secondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 5)
+                .background {
+                    if appState.selectedStartMode == mode {
+                        RoundedRectangle(cornerRadius: 5).fill(.secondary.opacity(0.2))
+                    }
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var deskTitleEntryControls: some View {
+        VStack(alignment: .trailing, spacing: 7) {
+            Button {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "chevron.left")
+                        .font(.caption)
+                    Text("Back")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            TextField("e.g. Math homework", text: $deskTitleText)
+                .textFieldStyle(.plain)
+                .font(.caption)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(.secondary.opacity(0.12))
+                )
+                .onSubmit { confirmStartDesk() }
+
+            Button { confirmStartDesk() } label: {
+                Text("Start Desk Session")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(width: 210)
+    }
+
+    private func handleStartTap() {
+        switch appState.selectedStartMode {
+        case .appTracking:
+            appState.startSession()
+        case .focus:
+            showDeskTitleEntry = true
+        }
+    }
+
+    private func confirmStartDesk() {
+        appState.startFocusSession(title: deskTitleText)
+        showDeskTitleEntry = false
+        deskTitleText = ""
     }
 }
 
@@ -960,6 +1291,7 @@ private struct WeeklySummarySection: View {
 private struct WeeklyDetailsView: View {
     @EnvironmentObject private var appState: AppState
     @Binding var isShowing: Bool
+    let onRenameSession: (TrackedSession) -> Void
     @State private var selectedDay: Date? = nil
 
     private var summaries: [DaySummary] { appState.weeklyDaySummaries }
@@ -997,7 +1329,8 @@ private struct WeeklyDetailsView: View {
             DayDetailsView(
                 summary: summary,
                 appTotals: appTotals(for: day),
-                onBack: { selectedDay = nil }
+                onBack: { selectedDay = nil },
+                onRenameSession: onRenameSession
             )
         } else {
             weeklyContent
@@ -1270,6 +1603,7 @@ private struct DayDetailsView: View {
     let summary: DaySummary
     let appTotals: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
     let onBack: () -> Void
+    let onRenameSession: (TrackedSession) -> Void
 
     private static let dayFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -1421,7 +1755,7 @@ private struct DayDetailsView: View {
                                         .fill(Color.accentColor)
                                         .frame(width: 7, height: 7)
                                         .padding(.top, 14)
-                                    SessionRow(session: session)
+                                    SessionRow(session: session, onRename: onRenameSession)
                                         .frame(maxWidth: .infinity)
                                 }
                             }
@@ -1967,6 +2301,148 @@ private struct SettingsSection<Content: View>: View {
                 .tracking(0.5)
             content
         }
+    }
+}
+
+// MARK: - Desk Session Timer View
+
+private struct DeskTimerView: View {
+    @EnvironmentObject private var appState: AppState
+    let onBack: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 5) {
+                        Image(systemName: "chevron.left")
+                            .font(.subheadline)
+                        Text("Back")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                    .foregroundStyle(.primary)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 7)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(.secondary.opacity(0.10))
+                    )
+                }
+                .buttonStyle(.plain)
+                Spacer()
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 28)
+
+            Spacer()
+
+            VStack(spacing: 16) {
+                Text(appState.sessionState == .active ? "Desk Session" : "Paused")
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.secondary)
+                    .textCase(.uppercase)
+                    .kerning(0.5)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Capsule().fill(.secondary.opacity(0.12)))
+
+                Text(appState.activeFocusTitle ?? "Desk Session")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+
+                Text(DurationTextFormatter.clock(from: appState.currentTotalSessionDuration))
+                    .font(.system(size: 72, weight: .ultraLight, design: .monospaced))
+                    .monospacedDigit()
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 12) {
+                    Button {
+                        if appState.sessionState == .active {
+                            appState.pauseSession()
+                        } else {
+                            appState.resumeSession()
+                        }
+                    } label: {
+                        Text(appState.sessionState == .active ? "Pause" : "Resume")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .frame(width: 110)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.secondary.opacity(0.15))
+                            )
+                    }
+                    .buttonStyle(.plain)
+
+                    Button { appState.endSession() } label: {
+                        Text("End Session")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .frame(width: 110)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.secondary.opacity(0.08))
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            Spacer()
+        }
+        .frame(minWidth: 640, minHeight: 480)
+    }
+}
+
+// MARK: - Desk Session Banner
+
+// Compact banner shown in the normal dashboard when a desk session is active but
+// the user has navigated away from the timer view. Tapping it returns to the timer.
+private struct DeskSessionBanner: View {
+    @EnvironmentObject private var appState: AppState
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                Circle()
+                    .fill(appState.sessionState.indicatorColor)
+                    .frame(width: 7, height: 7)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(appState.activeFocusTitle ?? "Desk Session")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.primary)
+                    Text(DurationTextFormatter.clock(from: appState.currentTotalSessionDuration))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                }
+                Spacer()
+                HStack(spacing: 4) {
+                    Text("Open Timer")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                    Image(systemName: "chevron.right")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.secondary.opacity(0.12))
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 

@@ -13,6 +13,7 @@
 		3F277DEAFED513CA49D83333 /* AppUsageTotal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */; };
 		42A6D7E643DA0E9EEB53B48B /* DashboardWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */; };
 		4C1CCC86B61CC9004CA23800 /* VeiraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */; };
+		553F27F42BC3C054F03AFAC0 /* SessionMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91B44C3060FA8BAF0EE8D3 /* SessionMode.swift */; };
 		617EC72ADC293C67038885FA /* DurationTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587C60CD937B164EA9976373 /* DurationTextFormatter.swift */; };
 		7B31913DB184E427A2ECF363 /* UpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06DE21D6F99AED021C8868 /* UpdaterService.swift */; };
 		7C0D72CABE9B83588D9E82FF /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 7606B64C3BC42065D285A416 /* Sparkle */; };
@@ -39,12 +40,13 @@
 		221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUsageTotal.swift; sourceTree = "<group>"; };
 		2464F6EB25635BE16F551ED7 /* ActivitySegmentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegmentBuilder.swift; sourceTree = "<group>"; };
 		2CC88B12856033A41894131D /* ActivitySegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySegment.swift; sourceTree = "<group>"; };
-		3A37D0019F91CF8942C16A47 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		3A37D0019F91CF8942C16A47 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		4B606FB93E032D47A107D538 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		4E4EE7C11B7589435CE9C8DC /* DashboardWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindowController.swift; sourceTree = "<group>"; };
 		579DB8727383AEF595F79DC4 /* ActiveAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMonitor.swift; sourceTree = "<group>"; };
 		587C60CD937B164EA9976373 /* DurationTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTextFormatter.swift; sourceTree = "<group>"; };
 		6CB3B92CB46AE4E3473A386A /* Veira.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E91B44C3060FA8BAF0EE8D3 /* SessionMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMode.swift; sourceTree = "<group>"; };
 		7204FFDC1506ED733CAD8550 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		806DDFFE22BD3518DD3C7A36 /* ActivityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEvent.swift; sourceTree = "<group>"; };
 		82CD140AEC86F9C7AF77116F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -52,7 +54,7 @@
 		8901E8E59EFB0F9A57A8F5A7 /* VeiraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VeiraApp.swift; sourceTree = "<group>"; };
 		8B7FDD6B62290C53DCF45216 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
 		9522AC2E97D505A9926649F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		95F59C53E1C80F915F3A4961 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		95F59C53E1C80F915F3A4961 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		C1962FEF339B142E7A6BB68B /* DaySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySummary.swift; sourceTree = "<group>"; };
 		C8370C75EAD383EE813F47CF /* Veira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Veira.entitlements; sourceTree = "<group>"; };
 		CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkDayRecord.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				2CC88B12856033A41894131D /* ActivitySegment.swift */,
 				221B55BA013CE0C2D5F1AB12 /* AppUsageTotal.swift */,
 				C1962FEF339B142E7A6BB68B /* DaySummary.swift */,
+				6E91B44C3060FA8BAF0EE8D3 /* SessionMode.swift */,
 				1CE1C8F450DE4DBB58E81B18 /* TrackedSession.swift */,
 				CD834F705B71F3DE253C99DA /* WorkDayRecord.swift */,
 			);
@@ -323,6 +326,7 @@
 				91407DE15DD9823F211FFCB5 /* LaunchAtLoginService.swift in Sources */,
 				FB01FF047CFA94CFEC2A2DD6 /* MenuBarView.swift in Sources */,
 				D181BE7E581255761DF0557D /* OnboardingView.swift in Sources */,
+				553F27F42BC3C054F03AFAC0 /* SessionMode.swift in Sources */,
 				E9105238CFE31127435EC906 /* SessionStore.swift in Sources */,
 				C1DDF8A5E0341AE444AFB14A /* TrackedSession.swift in Sources */,
 				7B31913DB184E427A2ECF363 /* UpdaterService.swift in Sources */,
@@ -345,8 +349,6 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = App/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Veira;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -392,7 +394,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -411,7 +413,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = 1.5.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -434,8 +436,6 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = App/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Veira;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -481,7 +481,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -494,7 +494,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = 1.5.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

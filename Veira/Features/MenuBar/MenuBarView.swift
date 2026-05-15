@@ -5,6 +5,10 @@ struct MenuBarView: View {
     @EnvironmentObject private var dashboardController: DashboardWindowController
     @EnvironmentObject private var updaterService: UpdaterService
 
+    // Desk title entry inline flow
+    @State private var showDeskTitleEntry = false
+    @State private var deskTitleText = ""
+
     var body: some View {
         VStack(spacing: 0) {
             statusHeader
@@ -18,6 +22,18 @@ struct MenuBarView: View {
         }
         .padding(.vertical, 4)
         .frame(width: 260)
+        .onChange(of: appState.sessionState) { _, newState in
+            if newState != .idle {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            }
+        }
+        .onChange(of: appState.selectedStartMode) { _, newMode in
+            if newMode != .focus {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            }
+        }
     }
 
     // MARK: - Status
@@ -27,9 +43,19 @@ struct MenuBarView: View {
             Circle()
                 .fill(appState.sessionState.indicatorColor)
                 .frame(width: 7, height: 7)
-            Text(appState.sessionState.statusLabel)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(appState.sessionState.statusLabel)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                // Show desk session title under the status label when active
+                if appState.activeSessionMode == .focus,
+                   let title = appState.activeFocusTitle {
+                    Text(title)
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                }
+            }
             Spacer()
         }
         .padding(.horizontal, 14)
@@ -53,8 +79,6 @@ struct MenuBarView: View {
     private var todayDurationText: some View {
         switch appState.sessionState {
         case .active, .paused, .pausedDueToInactivity:
-            // currentSessionTodayDuration clips the in-progress session to today's calendar day,
-            // so a session that started before midnight contributes only its post-midnight portion.
             let total = appState.todayTotalDuration + appState.currentSessionTodayDuration
             Text(DurationTextFormatter.string(from: total))
                 .font(.title2)
@@ -70,6 +94,7 @@ struct MenuBarView: View {
     }
 
     // MARK: - This Session Apps
+    // Hidden during desk sessions (no per-app breakdown for desk work).
 
     @ViewBuilder
     private var sessionAppsSection: some View {
@@ -105,7 +130,12 @@ struct MenuBarView: View {
         VStack(spacing: 0) {
             switch appState.sessionState {
             case .idle:
-                PanelButton("Start Session") { appState.startSession() }
+                if showDeskTitleEntry {
+                    deskTitleEntrySection
+                } else {
+                    modeSelector
+                    PanelButton("Start Session") { handleStartTap() }
+                }
             case .active:
                 PanelButton("Pause Session") { appState.pauseSession() }
                 PanelButton("End Session") { appState.endSession() }
@@ -114,6 +144,98 @@ struct MenuBarView: View {
                 PanelButton("End Session") { appState.endSession() }
             }
         }
+    }
+
+    // Compact two-option mode toggle: Computer | Desk
+    private var modeSelector: some View {
+        HStack(spacing: 1) {
+            modeTab("Computer", for: .appTracking)
+            modeTab("Desk", for: .focus)
+        }
+        .padding(3)
+        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+        .padding(.horizontal, 14)
+        .padding(.top, 8)
+        .padding(.bottom, 2)
+    }
+
+    private func modeTab(_ label: String, for mode: SessionMode) -> some View {
+        Button { appState.selectedStartMode = mode } label: {
+            Text(label)
+                .font(.caption)
+                .fontWeight(appState.selectedStartMode == mode ? .semibold : .regular)
+                .foregroundStyle(appState.selectedStartMode == mode ? .primary : .secondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 5)
+                .background {
+                    if appState.selectedStartMode == mode {
+                        RoundedRectangle(cornerRadius: 5).fill(.secondary.opacity(0.2))
+                    }
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func handleStartTap() {
+        switch appState.selectedStartMode {
+        case .appTracking:
+            appState.startSession()
+        case .focus:
+            showDeskTitleEntry = true
+        }
+    }
+
+    // Inline title entry shown when Desk mode is selected and Start Session is tapped.
+    private var deskTitleEntrySection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Full-width button row so the tap target is always reliably hit.
+            Button {
+                showDeskTitleEntry = false
+                deskTitleText = ""
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "chevron.left")
+                        .font(.caption)
+                    Text("Back")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            Text("What are you working on?")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 14)
+                .padding(.bottom, 8)
+
+            TextField("e.g. Math homework", text: $deskTitleText)
+                .textFieldStyle(.plain)
+                .font(.subheadline)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(.secondary.opacity(0.12))
+                )
+                .padding(.horizontal, 14)
+                .onSubmit { confirmStartDesk() }
+
+            PanelButton("Start Desk Session") { confirmStartDesk() }
+                .padding(.top, 4)
+        }
+    }
+
+    private func confirmStartDesk() {
+        appState.startFocusSession(title: deskTitleText)
+        dashboardController.open(appState: appState, updaterService: updaterService)
+        showDeskTitleEntry = false
+        deskTitleText = ""
     }
 
     // MARK: - Actions

@@ -19,6 +19,7 @@ enum SessionState {
 
 final class AppState: ObservableObject {
     @Published private(set) var sessionState: SessionState = .idle
+    @Published var selectedStartMode: SessionMode = .appTracking
     @Published var hasCompletedOnboarding: Bool = {
         let defaults = UserDefaults.standard
         // Read from the new Veira key if it has been written before.
@@ -49,6 +50,10 @@ final class AppState: ObservableObject {
     private var openSegmentAppName: String?
     private var openSegmentBundleId: String?
     private var openSegmentStartTime: Date?
+
+    // Focus/desk session state
+    private var currentSessionMode: SessionMode = .appTracking
+    private var currentFocusTitle: String? = nil
 
     @Published private(set) var liveClockTick: Date = Date()
     private var displayTimer: Timer?
@@ -108,6 +113,20 @@ final class AppState: ObservableObject {
 
     var sessionAccumulatedDuration: TimeInterval {
         accumulatedSessionDuration
+    }
+
+    /// Mode of the currently in-progress session. Returns .appTracking when idle.
+    var activeSessionMode: SessionMode { currentSessionMode }
+
+    /// Title of the currently in-progress focus session, or nil when idle / app-tracking.
+    var activeFocusTitle: String? { currentFocusTitle }
+
+    /// Total elapsed duration of the current session including the active run interval.
+    /// Does not clip to today — used by the focus timer window to show total session time.
+    var currentTotalSessionDuration: TimeInterval {
+        guard sessionState != .idle else { return 0 }
+        let elapsed = activeRunStartedAt.map { max(0, liveClockTick.timeIntervalSince($0)) } ?? 0
+        return accumulatedSessionDuration + elapsed
     }
 
     // The portion of the current in-progress session that falls within today's calendar day.
@@ -180,6 +199,8 @@ final class AppState: ObservableObject {
         }
     }
 
+    // App usage totals for today. Excludes focus-session sentinel segments so focus time
+    // does not appear as a fake app entry in the per-app breakdown.
     var todayAppTotals: [AppUsageTotal] {
         guard let record = todayRecord else { return [] }
 
@@ -188,6 +209,7 @@ final class AppState: ObservableObject {
         for session in record.sessions {
             for segment in session.segments {
                 guard let duration = segment.duration else { continue }
+                guard segment.bundleIdentifier != TrackedSession.focusBundleID else { continue }
                 if accumulated[segment.bundleIdentifier] != nil {
                     accumulated[segment.bundleIdentifier]!.duration += duration
                 } else {
@@ -201,6 +223,8 @@ final class AppState: ObservableObject {
             .sorted { $0.totalDuration > $1.totalDuration }
     }
 
+    // Per-app totals for the current in-progress session.
+    // Excludes focus sentinel segments; returns empty for focus sessions.
     var currentSessionAppTotals: [AppUsageTotal] {
         guard sessionState != .idle else { return [] }
 
@@ -208,6 +232,7 @@ final class AppState: ObservableObject {
 
         for segment in segmentBuilder.closedSegments {
             guard let duration = segment.duration else { continue }
+            guard segment.bundleIdentifier != TrackedSession.focusBundleID else { continue }
             if accumulated[segment.bundleIdentifier] != nil {
                 accumulated[segment.bundleIdentifier]!.duration += duration
             } else {
@@ -218,6 +243,7 @@ final class AppState: ObservableObject {
         if sessionState == .active,
            let appName = openSegmentAppName,
            let bundleId = openSegmentBundleId,
+           bundleId != TrackedSession.focusBundleID,
            let startTime = openSegmentStartTime {
             let elapsed = max(0, liveClockTick.timeIntervalSince(startTime))
             if accumulated[bundleId] != nil {
@@ -273,8 +299,11 @@ final class AppState: ObservableObject {
         cancelPauseReminder()
         stopAutosaveTimer()
         stopDisplayTimer()
-        monitor.stop()
-        idleMonitor.stop()
+        // Only stop monitor/idleMonitor if they were started (app tracking mode).
+        if currentSessionMode == .appTracking {
+            monitor.stop()
+            idleMonitor.stop()
+        }
 
         // sessionStartedAt is the authoritative indicator that a session is open.
         if let startedAt = sessionStartedAt {
@@ -287,13 +316,18 @@ final class AppState: ObservableObject {
                 }
                 activeRunStartedAt = nil
                 segmentBuilder.closeCurrentSegment(at: now)
+                openSegmentAppName = nil
+                openSegmentBundleId = nil
+                openSegmentStartTime = nil
             }
 
             let session = TrackedSession(
                 id: currentSessionId ?? UUID(),
                 startedAt: startedAt,
                 endedAt: now,
-                segments: segmentBuilder.drainSegments()
+                segments: segmentBuilder.drainSegments(),
+                title: currentFocusTitle,
+                mode: currentSessionMode
             )
 
             for (dayKey, slice) in splitSessionByDay(session) {
@@ -307,6 +341,8 @@ final class AppState: ObservableObject {
             // Clear so a second call to prepareForQuit skips this block.
             sessionStartedAt = nil
             currentSessionId = nil
+            currentSessionMode = .appTracking
+            currentFocusTitle = nil
         }
 
         // Write synchronously. saveFinal advances the generation counter (poisoning any
@@ -319,6 +355,8 @@ final class AppState: ObservableObject {
 
     func startSession() {
         guard sessionState == .idle else { return }
+        currentSessionMode = .appTracking
+        currentFocusTitle = nil
         cancelPauseReminder()
         let now = Date()
         sessionStartedAt = now
@@ -333,6 +371,40 @@ final class AppState: ObservableObject {
         idleMonitor.start()
     }
 
+    // Starts a Focus/Desk session with an optional title.
+    // Does not start active app tracking or idle detection.
+    // A synthetic segment with the focus sentinel bundle ID is opened in the segment builder
+    // so that the existing autosave, midnight-split, and quit-finalization paths work unchanged.
+    func startFocusSession(title: String) {
+        guard sessionState == .idle else { return }
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        currentFocusTitle = trimmed.isEmpty ? nil : trimmed
+        currentSessionMode = .focus
+        cancelPauseReminder()
+        let now = Date()
+        sessionStartedAt = now
+        activeRunStartedAt = now
+        accumulatedSessionDuration = 0
+        currentSessionId = UUID()
+        sessionState = .active
+
+        // Open a synthetic focus segment so the segment builder can track this run interval.
+        // Use the stable focusSegmentName — NOT the user-entered title — so user text is
+        // stored only in TrackedSession.title and never embedded in segment JSON data.
+        segmentBuilder.handle(ActivityEvent(
+            appName: TrackedSession.focusSegmentName,
+            bundleIdentifier: TrackedSession.focusBundleID,
+            timestamp: now
+        ))
+        openSegmentAppName = TrackedSession.focusSegmentName
+        openSegmentBundleId = TrackedSession.focusBundleID
+        openSegmentStartTime = now
+
+        startDisplayTimer()
+        startAutosaveTimer()
+        // No monitor.start() or idleMonitor.start() — focus sessions are user-controlled.
+    }
+
     func pauseSession() {
         guard sessionState == .active else { return }
         let now = Date()
@@ -341,25 +413,47 @@ final class AppState: ObservableObject {
         }
         activeRunStartedAt = nil
         sessionState = .paused
-        monitor.stop()
         segmentBuilder.closeCurrentSegment(at: now)
+        openSegmentAppName = nil
+        openSegmentBundleId = nil
+        openSegmentStartTime = nil
         stopDisplayTimer()
         stopAutosaveTimer()
         performAutosave()
-        idleMonitor.stop()
-        startPauseReminder()
+
+        if currentSessionMode == .appTracking {
+            monitor.stop()
+            idleMonitor.stop()
+            startPauseReminder()
+        }
+        // Focus sessions: no monitor/idleMonitor to stop, no pause reminder needed.
     }
 
     func resumeSession() {
         guard sessionState == .paused || sessionState == .pausedDueToInactivity else { return }
         cancelPauseReminder()
-        activeRunStartedAt = Date()
+        let now = Date()
+        activeRunStartedAt = now
         sessionState = .active
-        monitor.start()
         startDisplayTimer()
         startAutosaveTimer()
-        idleMonitor.threshold = idleThresholdSeconds
-        idleMonitor.start()
+
+        if currentSessionMode == .appTracking {
+            monitor.start()
+            idleMonitor.threshold = idleThresholdSeconds
+            idleMonitor.start()
+        } else {
+            // Focus: re-open a synthetic segment for the new run interval.
+            // Use the stable focusSegmentName — NOT the user-entered title.
+            segmentBuilder.handle(ActivityEvent(
+                appName: TrackedSession.focusSegmentName,
+                bundleIdentifier: TrackedSession.focusBundleID,
+                timestamp: now
+            ))
+            openSegmentAppName = TrackedSession.focusSegmentName
+            openSegmentBundleId = TrackedSession.focusBundleID
+            openSegmentStartTime = now
+        }
     }
 
     func endSession() {
@@ -374,18 +468,28 @@ final class AppState: ObservableObject {
                 accumulatedSessionDuration += now.timeIntervalSince(runStart)
             }
             activeRunStartedAt = nil
-            monitor.stop()
             segmentBuilder.closeCurrentSegment(at: now)
+            openSegmentAppName = nil
+            openSegmentBundleId = nil
+            openSegmentStartTime = nil
             stopDisplayTimer()
+            if currentSessionMode == .appTracking {
+                monitor.stop()
+            }
         case .paused, .pausedDueToInactivity:
             break
         }
 
-        idleMonitor.stop()
+        if currentSessionMode == .appTracking {
+            idleMonitor.stop()
+        }
         stopAutosaveTimer()
         finalizeSession(endedAt: now)
         accumulatedSessionDuration = 0
         sessionState = .idle
+        // Reset focus state after finalizeSession has captured title/mode.
+        currentSessionMode = .appTracking
+        currentFocusTitle = nil
     }
 
     private func idlePause(lastActivityAt: Date) {
@@ -397,6 +501,9 @@ final class AppState: ObservableObject {
         activeRunStartedAt = nil
         stopDisplayTimer()
         segmentBuilder.closeCurrentSegment(at: closeTime)
+        openSegmentAppName = nil
+        openSegmentBundleId = nil
+        openSegmentStartTime = nil
         monitor.stop()
         sessionState = .pausedDueToInactivity
         // idleMonitor keeps running to detect user return for the notification
@@ -477,6 +584,27 @@ final class AppState: ObservableObject {
         autosaveTimer = nil
     }
 
+    // MARK: - Session rename
+
+    // Updates the title of all slices that share the given session id (cross-midnight sessions
+    // produce multiple slices). Persists immediately via the async write path.
+    func renameSession(id: UUID, newTitle: String) {
+        let trimmed = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        var changed = false
+        for i in workDays.indices {
+            for j in workDays[i].sessions.indices where workDays[i].sessions[j].id == id {
+                guard workDays[i].sessions[j].title != trimmed else { continue }
+                workDays[i].sessions[j].title = trimmed
+                changed = true
+            }
+        }
+        guard changed else { return }
+        SessionStore.saveAsync(workDays)
+    }
+
+    // MARK: - Persistence helpers
+
     // Splits a TrackedSession into per-calendar-day slices.
     // Each ActivitySegment is cut at local midnight boundaries; the resulting sub-segments
     // are grouped by startOfDay. One TrackedSession per day is returned, sharing the
@@ -519,7 +647,9 @@ final class AppState: ObservableObject {
                 id: session.id,
                 startedAt: sliceStart,
                 endedAt: sliceEnd,
-                segments: sorted
+                segments: sorted,
+                title: session.title,
+                mode: session.mode
             ))
         }.sorted { $0.date < $1.date }
     }
@@ -533,7 +663,9 @@ final class AppState: ObservableObject {
             id: sessionId,
             startedAt: startedAt,
             endedAt: now,
-            segments: segmentBuilder.snapshotSegments(at: now)
+            segments: segmentBuilder.snapshotSegments(at: now),
+            title: currentFocusTitle,
+            mode: currentSessionMode
         )
 
         var snapshot = workDays
@@ -559,7 +691,9 @@ final class AppState: ObservableObject {
             id: currentSessionId ?? UUID(),
             startedAt: startedAt,
             endedAt: endedAt,
-            segments: segmentBuilder.drainSegments()
+            segments: segmentBuilder.drainSegments(),
+            title: currentFocusTitle,
+            mode: currentSessionMode
         )
 
         for (dayKey, slice) in splitSessionByDay(session) {

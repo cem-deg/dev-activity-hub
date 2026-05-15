@@ -4,8 +4,8 @@
 
 Veira/project.yml içinde:
 
-MARKETING_VERSION: "1.4.3"
-CURRENT_PROJECT_VERSION: "9"
+MARKETING_VERSION: "1.5.0"
+CURRENT_PROJECT_VERSION: "10"
 
 Kural:
 - MARKETING_VERSION kullanıcıya görünen sürüm
@@ -28,7 +28,7 @@ Product → Archive
 
 Archive ekranında solda version/build doğru görünmeli:
 
-1.4.3 (9)
+1.5.0 (10)
 
 ## 4) Export al
 
@@ -87,7 +87,8 @@ xattr -cr /tmp/VeiraRelease/Veira.app
 
 # Adım 3: Doğrula
 xattr -lr /tmp/VeiraRelease/Veira.app
-# Beklenen: hiçbir çıktı (tamamen temiz)
+# Beklenen: com.apple.FinderInfo veya com.apple.fileprovider.fpfs#P olmamalı.
+# macOS com.apple.provenance gösterebilir; strict codesign geçiyorsa bu kabul edilebilir.
 
 codesign --verify --deep --strict --verbose=2 /tmp/VeiraRelease/Veira.app
 # Beklenen: hata çıkmamalı; "valid on disk" ve "satisfies its Designated Requirement"
@@ -160,21 +161,21 @@ find ~/Library/Developer/Xcode/DerivedData -path "*/Sparkle/bin/sign_update" -ty
 
 GitHub'a yükleyebilmek için DMG'yi ilgili versioned release klasörüne kopyala:
 
-mkdir -p Veira/Releases/Veira_V1.4.3
-cp /tmp/VeiraRelease/Veira.dmg Veira/Releases/Veira_V1.4.3/Veira.dmg
+mkdir -p Veira/Releases/Veira_V1.5.0
+cp /tmp/VeiraRelease/Veira.dmg Veira/Releases/Veira_V1.5.0/Veira.dmg
 
 ## 9) GitHub Release oluştur
 
 GitHub → Releases → Draft new release
 
 Tag:
-v1.4.3
+v1.5.0
 
 Title:
-Veira v1.4.3
+Veira v1.5.0
 
 Asset:
-Veira/Releases/Veira_V1.4.3/Veira.dmg
+Veira/Releases/Veira_V1.5.0/Veira.dmg
 
 Publish release.
 
@@ -183,12 +184,12 @@ Publish release.
 Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 <item>
-  <title>Veira 1.4.3</title>
-  <sparkle:version>9</sparkle:version>
-  <sparkle:shortVersionString>1.4.3</sparkle:shortVersionString>
+  <title>Veira 1.5.0</title>
+  <sparkle:version>10</sparkle:version>
+  <sparkle:shortVersionString>1.5.0</sparkle:shortVersionString>
   <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
   <enclosure
-    url="https://github.com/cem-deg/Veira-activity-menubar/releases/download/v1.4.3/Veira.dmg"
+    url="https://github.com/cem-deg/Veira-activity-menubar/releases/download/v1.5.0/Veira.dmg"
     sparkle:edSignature="BURAYA_SIGNATURE"
     length="BURAYA_LENGTH"
     type="application/octet-stream"/>
@@ -198,7 +199,7 @@ Repo root’taki appcast.xml içinde en yeni item en üste eklenmeli:
 
 git add appcast.xml Veira/project.yml Veira/Veira.xcodeproj/project.pbxproj Veira/create-dmg-command.txt Veira/App/Info.plist
 # Ayrıca bu release'e ait değişen source/config dosyalarını da ekle.
-git commit -m "release v1.4.3"
+git commit -m "release v1.5.0"
 git push
 
 ## 12) Final test
@@ -211,4 +212,4 @@ Beklenen:
 - yeni sürüm bulunur
 - indirir
 - relaunch eder
-- Settings/About kısmında Version 1.4.3 (9) görünür
+- Settings/About kısmında Version 1.5.0 (10) görünür
