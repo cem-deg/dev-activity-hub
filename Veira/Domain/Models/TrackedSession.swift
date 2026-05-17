@@ -9,6 +9,8 @@ struct TrackedSession: Codable {
     // Missing keys decode to nil; nil mode is treated as .appTracking everywhere.
     var title: String?
     var mode: SessionMode?
+    var targetDuration: TimeInterval?   // nil for no target; absent in older workdays.json
+    var projectName: String?            // optional user-assigned project/label
 
     // Sentinel bundle ID written into ActivitySegments for focus/desk sessions.
     // Excluded from per-app usage totals so focus time does not appear as a fake app.
@@ -26,7 +28,9 @@ struct TrackedSession: Codable {
         endedAt: Date,
         segments: [ActivitySegment],
         title: String? = nil,
-        mode: SessionMode? = nil
+        mode: SessionMode? = nil,
+        targetDuration: TimeInterval? = nil,
+        projectName: String? = nil
     ) {
         self.id = id
         self.startedAt = startedAt
@@ -34,6 +38,8 @@ struct TrackedSession: Codable {
         self.segments = segments
         self.title = title
         self.mode = mode
+        self.targetDuration = targetDuration
+        self.projectName = projectName
     }
 
     // MARK: - Derived properties
@@ -43,7 +49,8 @@ struct TrackedSession: Codable {
 
     var displayTitle: String {
         if let title, !title.isEmpty { return title }
-        return isFocusSession ? "Desk Session" : appSummary
+        if isFocusSession { return "Desk Session" }
+        return appSummary.isEmpty ? "Computer Session" : appSummary
     }
 
     var segmentDuration: TimeInterval {

@@ -171,6 +171,11 @@ GitHub → Releases → Draft new release
 Tag:
 v1.5.0
 
+Important:
+- The release tag and the download URL in appcast.xml must match exactly.
+- GitHub release asset URLs are case-sensitive.
+- Use lowercase `v` consistently for future release tags: v1.5.1, v1.5.2, ...
+
 Title:
 Veira v1.5.0
 

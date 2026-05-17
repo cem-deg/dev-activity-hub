@@ -7,13 +7,18 @@ struct DashboardView: View {
     @State private var isShowingWeeklyDetails = false
     @State private var isShowingSettings = false
     @State private var isShowingDeskTimer = false
+    @State private var isShowingWeeklyReview = false
+    @State private var projectDetailName: String?    // drives ProjectDetailView
+    @State private var projectFilter: String?        // filters TodaySummarySection session list
     @State private var renamingSession: TrackedSession?
     @State private var renameText = ""
+    @State private var labelingSession: TrackedSession?
+    @State private var labelText = ""
 
     var body: some View {
         ZStack {
             dashboardContent
-                .disabled(renamingSession != nil)
+                .disabled(renamingSession != nil || labelingSession != nil)
 
             if let renamingSession {
                 RenameSessionDialog(
@@ -24,8 +29,19 @@ struct DashboardView: View {
                 )
                 .transition(.opacity.combined(with: .scale(scale: 0.98)))
             }
+
+            if let labelingSession {
+                ProjectLabelDialog(
+                    session: labelingSession,
+                    labelText: $labelText,
+                    onCancel: cancelLabel,
+                    onDone: commitLabel
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.98)))
+            }
         }
         .animation(.easeInOut(duration: 0.15), value: renamingSession?.id)
+        .animation(.easeInOut(duration: 0.15), value: labelingSession?.id)
         .onAppear {
             // Auto-show desk timer when dashboard is opened during an active desk session.
             if appState.activeSessionMode == .focus && appState.sessionState != .idle {
@@ -44,14 +60,26 @@ struct DashboardView: View {
 
     @ViewBuilder
     private var dashboardContent: some View {
-        if isShowingDeskTimer {
+        if let completed = appState.lastCompletedSession, appState.sessionState == .idle {
+            SessionCompletionView(session: completed, onDismiss: appState.clearLastCompletedSession)
+        } else if let name = projectDetailName {
+            ProjectDetailView(
+                projectName: name,
+                onBack: { projectDetailName = nil },
+                onFilterToday: { showProjectFilter(name) }
+            )
+        } else if isShowingDeskTimer {
             DeskTimerView(onBack: { isShowingDeskTimer = false })
+        } else if isShowingWeeklyReview {
+            WeeklyReviewView(onBack: { isShowingWeeklyReview = false }, onProjectTap: openProjectDetail)
         } else if isShowingSettings {
             SettingsView(onBack: { isShowingSettings = false })
         } else if isShowingWeeklyDetails {
             WeeklyDetailsView(
                 isShowing: $isShowingWeeklyDetails,
-                onRenameSession: beginRename
+                onRenameSession: beginRename,
+                onLabelSession: beginLabel,
+                onProjectTap: openProjectDetail
             )
             .environmentObject(appState)
         } else {
@@ -59,15 +87,59 @@ struct DashboardView: View {
         }
     }
 
+    private func openProjectDetail(_ name: String) {
+        projectDetailName = name
+    }
+
+    private func showProjectFilter(_ name: String) {
+        projectFilter = name
+        projectDetailName = nil
+        isShowingWeeklyReview = false
+        isShowingWeeklyDetails = false
+        isShowingSettings = false
+        isShowingDeskTimer = false
+    }
+
     private var mainDashboard: some View {
         VStack(spacing: 0) {
-            // Sticky desk session banner — lives outside the ScrollView so it stays
-            // pinned at the top while the dashboard content scrolls underneath.
+            // Sticky desk session banner.
             if appState.activeSessionMode == .focus && appState.sessionState != .idle {
                 DeskSessionBanner { isShowingDeskTimer = true }
                     .padding(.horizontal, 32)
                     .padding(.top, 16)
                     .padding(.bottom, 8)
+            }
+            // Project filter chip — shown when a project filter is active.
+            if let f = projectFilter {
+                HStack(spacing: 6) {
+                    Text("Today Sessions:")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(f)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                    Button { projectFilter = nil } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                    Button { openProjectDetail(f) } label: {
+                        Text("Project Details")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                .padding(.horizontal, 32)
+                .padding(.top, appState.activeSessionMode == .focus ? 8 : 16)
+                .padding(.bottom, 8)
             }
             ScrollView {
             VStack(alignment: .leading, spacing: 18) {
@@ -102,10 +174,15 @@ struct DashboardView: View {
                     .buttonStyle(.plain)
                 }
                 SessionStatusCard()
-                TodaySummarySection(onRenameSession: beginRename)
+                TodaySummarySection(
+                    onRenameSession: beginRename,
+                    onLabelSession: beginLabel,
+                    onProjectTap: openProjectDetail,
+                    projectFilter: projectFilter
+                )
                 QuickInsightsSection()
-                AppBreakdownSection()
-                WeeklySummarySection(isShowingWeeklyDetails: $isShowingWeeklyDetails)
+                AppBreakdownSection(projectFilter: projectFilter)
+                WeeklySummarySection(isShowingWeeklyDetails: $isShowingWeeklyDetails, isShowingWeeklyReview: $isShowingWeeklyReview)
             }
             .padding(32)
             } // ScrollView
@@ -129,6 +206,23 @@ struct DashboardView: View {
             appState.renameSession(id: renamingSession.id, newTitle: trimmed)
         }
         cancelRename()
+    }
+
+    func beginLabel(_ session: TrackedSession) {
+        labelText = session.projectName ?? ""
+        labelingSession = session
+    }
+
+    private func cancelLabel() {
+        labelingSession = nil
+        labelText = ""
+    }
+
+    private func commitLabel() {
+        if let labelingSession {
+            appState.setSessionProject(id: labelingSession.id, projectName: labelText)
+        }
+        cancelLabel()
     }
 }
 
@@ -234,11 +328,18 @@ private struct TodaySummarySection: View {
     @EnvironmentObject private var appState: AppState
     @State private var showAllSessions = false
     let onRenameSession: (TrackedSession) -> Void
+    let onLabelSession: (TrackedSession) -> Void
+    var onProjectTap: ((String) -> Void)? = nil
+    var projectFilter: String? = nil
 
     private static let defaultSessionLimit = 1
 
     private var sessions: [TrackedSession] {
-        (appState.todayRecord?.sessions ?? []).reversed()
+        let all = Array((appState.todayRecord?.sessions ?? []).reversed())
+        if let f = projectFilter, !f.isEmpty {
+            return all.filter { $0.projectName == f }
+        }
+        return all
     }
 
     var body: some View {
@@ -305,7 +406,7 @@ private struct TodaySummarySection: View {
 
         return VStack(spacing: 6) {
             ForEach(visible, id: \.id) { session in
-                SessionRow(session: session, onRename: onRenameSession)
+                SessionRow(session: session, onRename: onRenameSession, onLabel: onLabelSession, onProjectTap: onProjectTap)
             }
             if needsToggle {
                 Button {
@@ -329,7 +430,9 @@ private struct TodaySummarySection: View {
 
 private struct SessionRow: View {
     let session: TrackedSession
-    let onRename: (TrackedSession) -> Void
+    var onRename: ((TrackedSession) -> Void)? = nil
+    var onLabel: ((TrackedSession) -> Void)? = nil
+    var onProjectTap: ((String) -> Void)? = nil
     @State private var isExpanded = false
 
     private static let timeFormatter: DateFormatter = {
@@ -357,12 +460,35 @@ private struct SessionRow: View {
         return VStack(spacing: 0) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Desk")
-                        .font(.caption2)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.secondary)
-                        .textCase(.uppercase)
-                        .kerning(0.3)
+                    HStack(spacing: 6) {
+                        Text("Desk")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                            .kerning(0.3)
+                        if let proj = session.projectName, !proj.isEmpty {
+                            if let handler = onProjectTap {
+                                Button { handler(proj) } label: {
+                                    Text(proj)
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 2)
+                                        .background(Capsule().fill(Color.accentColor.opacity(0.12)))
+                                }
+                                .buttonStyle(.plain)
+                                .help("View \(proj)")
+                            } else {
+                                Text(proj)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Capsule().fill(.secondary.opacity(0.12)))
+                            }
+                        }
+                    }
                     Text(session.displayTitle)
                         .font(.subheadline)
                         .fontWeight(.semibold)
@@ -376,26 +502,41 @@ private struct SessionRow: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .monospacedDigit()
-                    Button {
-                        onRename(session)
-                    } label: {
-                        HStack(spacing: 5) {
-                            Image(systemName: "pencil")
-                                .font(.caption2)
-                            Text("Rename")
-                                .font(.caption2)
-                                .fontWeight(.medium)
+                    HStack(spacing: 6) {
+                        if let handler = onLabel {
+                            Button { handler(session) } label: {
+                                Image(systemName: "tag")
+                                    .font(.caption2)
+                                    .foregroundStyle(.tertiary)
+                                    .padding(4)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .help(session.projectName == nil ? "Assign project" : "Edit project")
                         }
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(.secondary.opacity(0.10))
-                        )
+                        if let handler = onRename {
+                            Button {
+                                handler(session)
+                            } label: {
+                                HStack(spacing: 5) {
+                                    Image(systemName: "pencil")
+                                        .font(.caption2)
+                                    Text("Rename")
+                                        .font(.caption2)
+                                        .fontWeight(.medium)
+                                }
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(.secondary.opacity(0.10))
+                                )
+                            }
+                            .buttonStyle(.plain)
+                            .help("Rename desk session")
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .help("Rename desk session")
                 }
             }
             .padding(.horizontal, 12)
@@ -418,44 +559,50 @@ private struct SessionRow: View {
         let hasTimeline = session.endedAt > session.startedAt && !session.segments.isEmpty
 
         return VStack(spacing: 0) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.15)) {
-                    isExpanded.toggle()
-                }
-            } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(DurationTextFormatter.string(from: duration))
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        HStack(spacing: 8) {
-                            Text("\(start) – \(end)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            if !apps.isEmpty {
-                                Text("·")
-                                    .font(.caption)
-                                    .foregroundStyle(.tertiary)
-                                Text(apps)
-                                    .font(.caption)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
+            HStack(spacing: 4) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        isExpanded.toggle()
                     }
-                    Spacer()
-                    if !breakdown.isEmpty {
-                        Image(systemName: "chevron.right")
+                } label: {
+                    appTrackingSummary(
+                        start: start,
+                        end: end,
+                        duration: duration,
+                        apps: apps,
+                        breakdown: breakdown
+                    )
+                }
+                .buttonStyle(.plain)
+
+                // Project capsule button (if project is set and handler exists)
+                if let proj = session.projectName, !proj.isEmpty, let handler = onProjectTap {
+                    Button { handler(proj) } label: {
+                        Text(proj)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Capsule().fill(Color.accentColor.opacity(0.12)))
+                    }
+                    .buttonStyle(.plain)
+                    .help("View \(proj)")
+                }
+                if let handler = onLabel {
+                    Button { handler(session) } label: {
+                        Image(systemName: session.projectName == nil ? "tag" : "tag.fill")
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
-                            .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                            .frame(width: 24, height: 24)
+                            .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
+                    .help(session.projectName == nil ? "Assign project" : "Edit project")
                 }
-                .contentShape(Rectangle())
-                .padding(.horizontal, 12)
-                .padding(.top, 8)
-                .padding(.bottom, hasTimeline ? 6 : 8)
+                Spacer(minLength: 12)
             }
-            .buttonStyle(.plain)
+            .padding(.top, 8)
+            .padding(.bottom, hasTimeline ? 6 : 8)
 
             if hasTimeline {
                 SessionTimelineBar(session: session)
@@ -476,6 +623,45 @@ private struct SessionRow: View {
             RoundedRectangle(cornerRadius: 6)
                 .fill(.secondary.opacity(0.08))
         )
+    }
+
+    private func appTrackingSummary(
+        start: String,
+        end: String,
+        duration: TimeInterval,
+        apps: String,
+        breakdown: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
+    ) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(DurationTextFormatter.string(from: duration))
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                HStack(spacing: 8) {
+                    Text("\(start) – \(end)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    if !apps.isEmpty {
+                        Text("·")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                        Text(apps)
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+            }
+            Spacer()
+            if !breakdown.isEmpty {
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .rotationEffect(.degrees(isExpanded ? 90 : 0))
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .padding(.leading, 12)
     }
 }
 
@@ -784,6 +970,14 @@ private struct SessionStatusCard: View {
     @EnvironmentObject private var appState: AppState
     @State private var showDeskTitleEntry = false
     @State private var deskTitleText = ""
+    @State private var deskProjectText = ""
+    @State private var deskTargetMinutes: Int = 0
+    private static let idleControlWidth: CGFloat = 145
+
+    private static let targetOptions: [(label: String, minutes: Int)] = [
+        ("No target", 0), ("15 min", 15), ("25 min", 25), ("30 min", 30),
+        ("45 min", 45), ("1 hour", 60), ("90 min", 90), ("2 hours", 120),
+    ]
 
     var body: some View {
         HStack(spacing: 10) {
@@ -813,14 +1007,12 @@ private struct SessionStatusCard: View {
         )
         .onChange(of: appState.sessionState) { _, newState in
             if newState != .idle {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             }
         }
         .onChange(of: appState.selectedStartMode) { _, newMode in
             if newMode != .focus {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             }
         }
     }
@@ -898,19 +1090,20 @@ private struct SessionStatusCard: View {
     }
 
     private var idleStartControls: some View {
-        VStack(alignment: .trailing, spacing: 8) {
+        VStack(spacing: 8) {
             modeSelector
             Button { handleStartTap() } label: {
                 Text("Start Session")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 12)
+                    .frame(maxWidth: .infinity)
                     .padding(.vertical, 6)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+                    .background(RoundedRectangle(cornerRadius: 7).fill(Color.accentColor))
             }
             .buttonStyle(.plain)
         }
+        .frame(width: Self.idleControlWidth)
     }
 
     private var modeSelector: some View {
@@ -919,7 +1112,6 @@ private struct SessionStatusCard: View {
             modeTab("Desk", for: .focus)
         }
         .padding(3)
-        .frame(width: 188)
         .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
     }
 
@@ -930,7 +1122,7 @@ private struct SessionStatusCard: View {
                 .fontWeight(appState.selectedStartMode == mode ? .semibold : .regular)
                 .foregroundStyle(appState.selectedStartMode == mode ? .primary : .secondary)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 5)
+                .padding(.vertical, 4)
                 .background {
                     if appState.selectedStartMode == mode {
                         RoundedRectangle(cornerRadius: 5).fill(.secondary.opacity(0.2))
@@ -943,8 +1135,7 @@ private struct SessionStatusCard: View {
     private var deskTitleEntryControls: some View {
         VStack(alignment: .trailing, spacing: 7) {
             Button {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "chevron.left")
@@ -964,11 +1155,32 @@ private struct SessionStatusCard: View {
                 .font(.caption)
                 .padding(.horizontal, 9)
                 .padding(.vertical, 6)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(.secondary.opacity(0.12))
-                )
+                .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.12)))
                 .onSubmit { confirmStartDesk() }
+
+            TextField("Project (optional)", text: $deskProjectText)
+                .textFieldStyle(.plain)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 5)
+                .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.09)))
+
+            // Target duration picker
+            HStack(spacing: 5) {
+                Text("Target")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Picker("", selection: $deskTargetMinutes) {
+                    ForEach(Self.targetOptions, id: \.minutes) { option in
+                        Text(option.label).tag(option.minutes)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .font(.caption2)
+                Spacer()
+            }
 
             Button { confirmStartDesk() } label: {
                 Text("Start Desk Session")
@@ -994,9 +1206,16 @@ private struct SessionStatusCard: View {
     }
 
     private func confirmStartDesk() {
-        appState.startFocusSession(title: deskTitleText)
+        let target: TimeInterval? = deskTargetMinutes > 0 ? Double(deskTargetMinutes) * 60 : nil
+        appState.startFocusSession(title: deskTitleText, targetDuration: target, projectName: deskProjectText)
+        resetDeskEntry()
+    }
+
+    private func resetDeskEntry() {
         showDeskTitleEntry = false
         deskTitleText = ""
+        deskProjectText = ""
+        deskTargetMinutes = 0
     }
 }
 
@@ -1004,14 +1223,35 @@ private struct SessionStatusCard: View {
 
 private struct AppBreakdownSection: View {
     @EnvironmentObject private var appState: AppState
+    var projectFilter: String? = nil
+
+    private var totals: [AppUsageTotal] {
+        guard let projectFilter, !projectFilter.isEmpty else {
+            return appState.todayAppTotals
+        }
+        guard let record = appState.todayRecord else { return [] }
+
+        var accumulated: [String: (appName: String, duration: TimeInterval)] = [:]
+        for session in record.sessions where session.projectName == projectFilter {
+            for entry in session.perAppDurations {
+                if accumulated[entry.bundleIdentifier] != nil {
+                    accumulated[entry.bundleIdentifier]!.duration += entry.duration
+                } else {
+                    accumulated[entry.bundleIdentifier] = (entry.appName, entry.duration)
+                }
+            }
+        }
+
+        return accumulated
+            .map { AppUsageTotal(appName: $0.value.appName, bundleIdentifier: $0.key, totalDuration: $0.value.duration) }
+            .sorted { $0.totalDuration > $1.totalDuration }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("App Breakdown")
                 .font(.title3)
                 .fontWeight(.semibold)
-
-            let totals = appState.todayAppTotals
 
             if totals.isEmpty {
                 RoundedRectangle(cornerRadius: 8)
@@ -1256,6 +1496,7 @@ private struct TodayAppDonutChart: View {
 private struct WeeklySummarySection: View {
     @EnvironmentObject private var appState: AppState
     @Binding var isShowingWeeklyDetails: Bool
+    @Binding var isShowingWeeklyReview: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -1266,21 +1507,33 @@ private struct WeeklySummarySection: View {
             let summaries = appState.weeklyDaySummaries
             WeeklyBarChart(summaries: summaries)
 
-            Button {
-                isShowingWeeklyDetails = true
-            } label: {
-                Text("Show Details")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 7)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(.secondary.opacity(0.10))
-                    )
+            HStack(spacing: 10) {
+                Button {
+                    isShowingWeeklyDetails = true
+                } label: {
+                    Text("Show Details")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    isShowingWeeklyReview = true
+                } label: {
+                    Text("Weekly Review")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
             .frame(maxWidth: .infinity, alignment: .center)
         }
     }
@@ -1292,6 +1545,8 @@ private struct WeeklyDetailsView: View {
     @EnvironmentObject private var appState: AppState
     @Binding var isShowing: Bool
     let onRenameSession: (TrackedSession) -> Void
+    let onLabelSession: (TrackedSession) -> Void
+    var onProjectTap: ((String) -> Void)? = nil
     @State private var selectedDay: Date? = nil
 
     private var summaries: [DaySummary] { appState.weeklyDaySummaries }
@@ -1330,7 +1585,9 @@ private struct WeeklyDetailsView: View {
                 summary: summary,
                 appTotals: appTotals(for: day),
                 onBack: { selectedDay = nil },
-                onRenameSession: onRenameSession
+                onRenameSession: onRenameSession,
+                onLabelSession: onLabelSession,
+                onProjectTap: onProjectTap
             )
         } else {
             weeklyContent
@@ -1604,6 +1861,8 @@ private struct DayDetailsView: View {
     let appTotals: [(bundleIdentifier: String, appName: String, duration: TimeInterval)]
     let onBack: () -> Void
     let onRenameSession: (TrackedSession) -> Void
+    let onLabelSession: (TrackedSession) -> Void
+    var onProjectTap: ((String) -> Void)? = nil
 
     private static let dayFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -1755,7 +2014,7 @@ private struct DayDetailsView: View {
                                         .fill(Color.accentColor)
                                         .frame(width: 7, height: 7)
                                         .padding(.top, 14)
-                                    SessionRow(session: session, onRename: onRenameSession)
+                                    SessionRow(session: session, onRename: onRenameSession, onLabel: onLabelSession, onProjectTap: onProjectTap)
                                         .frame(maxWidth: .infinity)
                                 }
                             }
@@ -2304,6 +2563,114 @@ private struct SettingsSection<Content: View>: View {
     }
 }
 
+// MARK: - Session Completion Summary
+
+private struct SessionCompletionView: View {
+    let session: TrackedSession
+    let onDismiss: () -> Void
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 28) {
+                // Header
+                VStack(spacing: 6) {
+                    Text("Session Complete")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    if session.isFocusSession {
+                        Text(session.displayTitle)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let project = session.projectName, !project.isEmpty {
+                        Text(project)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Capsule().fill(.secondary.opacity(0.12)))
+                    }
+                }
+
+                // Elapsed duration
+                VStack(spacing: 4) {
+                    Text(DurationTextFormatter.clock(from: session.segmentDuration))
+                        .font(.system(size: 56, weight: .ultraLight, design: .monospaced))
+                        .monospacedDigit()
+                    Text("Total time")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+
+                // Desk: target reached/missed
+                if session.isFocusSession, let target = session.targetDuration, target > 0 {
+                    let reached = session.segmentDuration >= target
+                    HStack(spacing: 8) {
+                        Image(systemName: reached ? "checkmark.circle.fill" : "circle.dashed")
+                            .foregroundStyle(reached ? Color.green : Color.secondary)
+                        Text(reached
+                             ? "Goal of \(DurationTextFormatter.clock(from: target)) reached"
+                             : "Goal of \(DurationTextFormatter.clock(from: target)) — \(DurationTextFormatter.clock(from: max(0, target - session.segmentDuration))) short")
+                            .font(.subheadline)
+                            .foregroundStyle(reached ? Color.primary : Color.secondary)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(reached ? Color.green.opacity(0.10) : Color.secondary.opacity(0.10))
+                    )
+                }
+
+                // Computer: top apps
+                if !session.isFocusSession {
+                    let topApps = Array(session.perAppDurations.prefix(3))
+                    if !topApps.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Top Apps")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                                .textCase(.uppercase)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            ForEach(topApps, id: \.bundleIdentifier) { entry in
+                                HStack {
+                                    Text(entry.appName)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(1)
+                                    Spacer()
+                                    Text(DurationTextFormatter.string(from: entry.duration))
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(.secondary)
+                                        .monospacedDigit()
+                                }
+                            }
+                        }
+                        .padding(14)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+                        .frame(maxWidth: 320)
+                    }
+                }
+
+                Button("Done", action: onDismiss)
+                    .buttonStyle(.plain)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.accentColor))
+            }
+            .frame(maxWidth: 420)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 44)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 // MARK: - Desk Session Timer View
 
 private struct DeskTimerView: View {
@@ -2353,10 +2720,54 @@ private struct DeskTimerView: View {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
 
+                if let project = appState.activeSessionProjectName, !project.isEmpty {
+                    Text(project)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(.secondary.opacity(0.12)))
+                }
+
                 Text(DurationTextFormatter.clock(from: appState.currentTotalSessionDuration))
                     .font(.system(size: 72, weight: .ultraLight, design: .monospaced))
                     .monospacedDigit()
                     .foregroundStyle(.primary)
+
+                // Target progress — shown only when a target was set for this session.
+                if let target = appState.activeFocusTargetDuration, target > 0 {
+                    let elapsed = appState.currentTotalSessionDuration
+                    let progress = min(1.0, elapsed / target)
+                    let reached = elapsed >= target
+                    VStack(spacing: 5) {
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(.secondary.opacity(0.15))
+                                    .frame(height: 6)
+                                if progress > 0 {
+                                    RoundedRectangle(cornerRadius: 3)
+                                        .fill(reached ? Color.green.opacity(0.8) : Color.accentColor.opacity(0.75))
+                                        .frame(width: geo.size.width * CGFloat(progress), height: 6)
+                                }
+                            }
+                        }
+                        .frame(height: 6)
+                        HStack {
+                            Text(reached ? "Goal reached" : "Goal: \(DurationTextFormatter.clock(from: target))")
+                                .font(.caption2)
+                                .foregroundStyle(reached ? Color.green : Color.secondary)
+                            Spacer()
+                            if !reached {
+                                Text("\(DurationTextFormatter.clock(from: max(0, target - elapsed))) remaining")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .monospacedDigit()
+                            }
+                        }
+                    }
+                    .frame(maxWidth: 320)
+                }
 
                 HStack(spacing: 12) {
                     Button {
@@ -2414,10 +2825,22 @@ private struct DeskSessionBanner: View {
                     .fill(appState.sessionState.indicatorColor)
                     .frame(width: 7, height: 7)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(appState.activeFocusTitle ?? "Desk Session")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.primary)
+                    HStack(spacing: 6) {
+                        Text(appState.activeFocusTitle ?? "Desk Session")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                        if let project = appState.activeSessionProjectName, !project.isEmpty {
+                            Text(project)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(.secondary.opacity(0.12)))
+                                .lineLimit(1)
+                        }
+                    }
                     Text(DurationTextFormatter.clock(from: appState.currentTotalSessionDuration))
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -2443,6 +2866,401 @@ private struct DeskSessionBanner: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Project Label Dialog
+
+private struct ProjectLabelDialog: View {
+    let session: TrackedSession
+    @Binding var labelText: String
+    let onCancel: () -> Void
+    let onDone: () -> Void
+    @FocusState private var isFieldFocused: Bool
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.32).ignoresSafeArea().onTapGesture(perform: onCancel)
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text((session.projectName ?? "").isEmpty ? "Assign Project" : "Edit Project")
+                        .font(.headline).fontWeight(.semibold)
+                    Text("Optional label shown on the session row.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+                TextField("e.g. Q3 Planning", text: $labelText)
+                    .textFieldStyle(.plain)
+                    .font(.title3).fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 12).padding(.vertical, 11)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(.secondary.opacity(0.18), lineWidth: 1))
+                    .focused($isFieldFocused)
+                    .onSubmit(onDone)
+                HStack(spacing: 8) {
+                    if !(session.projectName ?? "").isEmpty {
+                        Button("Clear") { labelText = ""; onDone() }
+                            .buttonStyle(.plain).font(.caption).foregroundStyle(.secondary)
+                            .padding(.horizontal, 12).padding(.vertical, 7)
+                            .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.10)))
+                    }
+                    Spacer()
+                    Button("Cancel", action: onCancel)
+                        .buttonStyle(.plain).font(.caption).fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.10)))
+                    Button("Done", action: onDone)
+                        .buttonStyle(.plain).font(.caption).fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 14).padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 6).fill(Color.accentColor))
+                }
+            }
+            .padding(20).frame(width: 360)
+            .background(RoundedRectangle(cornerRadius: 8).fill(.regularMaterial)
+                .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 14))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear { isFieldFocused = true }
+    }
+}
+
+// MARK: - Weekly Review View
+
+private struct WeeklyReviewView: View {
+    @EnvironmentObject private var appState: AppState
+    let onBack: () -> Void
+    var onProjectTap: ((String) -> Void)? = nil
+
+    private var calendar: Calendar { .current }
+
+    // Last 7 calendar days ending today
+    private var reviewDays: [Date] {
+        let today = calendar.startOfDay(for: Date())
+        return (0..<7).reversed().compactMap { calendar.date(byAdding: .day, value: -$0, to: today) }
+    }
+
+    private var allSessions: [TrackedSession] {
+        reviewDays.flatMap { day in
+            appState.recordedDays.first(where: { calendar.isDate($0.date, inSameDayAs: day) })?.sessions ?? []
+        }
+    }
+
+    private var totalDuration: TimeInterval { allSessions.reduce(0) { $0 + $1.segmentDuration } }
+    private var deskDuration: TimeInterval { allSessions.filter(\.isFocusSession).reduce(0) { $0 + $1.segmentDuration } }
+    private var computerDuration: TimeInterval { allSessions.filter { !$0.isFocusSession }.reduce(0) { $0 + $1.segmentDuration } }
+    private var sessionCount: Int { Set(allSessions.map(\.id)).count }
+
+    private var projectTotals: [(name: String, duration: TimeInterval)] {
+        var totals: [String: TimeInterval] = [:]
+        for s in allSessions {
+            guard let p = s.projectName, !p.isEmpty else { continue }
+            totals[p, default: 0] += s.segmentDuration
+        }
+        return totals.map { ($0.key, $0.value) }.sorted { $0.duration > $1.duration }
+    }
+
+    private var topComputerApps: [(bundleIdentifier: String, appName: String, duration: TimeInterval)] {
+        var totals: [String: (appName: String, duration: TimeInterval)] = [:]
+        for s in allSessions where !s.isFocusSession {
+            for entry in s.perAppDurations {
+                if totals[entry.bundleIdentifier] != nil {
+                    totals[entry.bundleIdentifier]!.duration += entry.duration
+                } else {
+                    totals[entry.bundleIdentifier] = (entry.appName, entry.duration)
+                }
+            }
+        }
+        return totals
+            .map { (bundleIdentifier: $0.key, appName: $0.value.appName, duration: $0.value.duration) }
+            .sorted { $0.duration > $1.duration }
+    }
+
+    private static let weekdayFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "EEE MMM d"; return f
+    }()
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 28) {
+                Button(action: onBack) {
+                    HStack(spacing: 5) {
+                        Image(systemName: "chevron.left").font(.subheadline)
+                        Text("Back").font(.subheadline).fontWeight(.medium)
+                    }
+                    .foregroundStyle(.primary).padding(.horizontal, 12).padding(.vertical, 7)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                }
+                .buttonStyle(.plain)
+
+                Text("Weekly Review").font(.title2).fontWeight(.semibold)
+
+                // Totals
+                reviewSection("This Week") {
+                    ReviewRow(label: "Total Tracked", value: DurationTextFormatter.string(from: totalDuration), isTotal: true)
+                    ReviewRow(label: "Computer Sessions", value: DurationTextFormatter.string(from: computerDuration))
+                    ReviewRow(label: "Desk Sessions", value: DurationTextFormatter.string(from: deskDuration))
+                    ReviewRow(label: "Sessions", value: "\(sessionCount)")
+                }
+
+                // Projects — tappable when onProjectTap is set
+                if !projectTotals.isEmpty {
+                    reviewSection("Projects") {
+                        ForEach(projectTotals, id: \.name) { p in
+                            if let handler = onProjectTap {
+                                Button { handler(p.name) } label: {
+                                    ReviewRow(label: p.name, value: DurationTextFormatter.string(from: p.duration), isClickable: true)
+                                }
+                                .buttonStyle(.plain)
+                            } else {
+                                ReviewRow(label: p.name, value: DurationTextFormatter.string(from: p.duration))
+                            }
+                        }
+                    }
+                }
+
+                // Top computer apps
+                if !topComputerApps.isEmpty {
+                    reviewSection("Top Apps") {
+                        ForEach(topComputerApps.prefix(5), id: \.bundleIdentifier) { app in
+                            ReviewRow(label: app.appName, value: DurationTextFormatter.string(from: app.duration))
+                        }
+                    }
+                }
+
+                // Day by day
+                reviewSection("Daily Breakdown") {
+                    ForEach(reviewDays, id: \.self) { day in
+                        let daySessions = appState.recordedDays.first(where: { calendar.isDate($0.date, inSameDayAs: day) })?.sessions ?? []
+                        let dur = daySessions.reduce(0.0) { $0 + $1.segmentDuration }
+                        ReviewRow(
+                            label: Self.weekdayFormatter.string(from: day),
+                            value: dur > 0 ? DurationTextFormatter.string(from: dur) : "—",
+                            secondary: dur > 0 ? "\(daySessions.count) session\(daySessions.count == 1 ? "" : "s")" : nil
+                        )
+                    }
+                }
+            }
+            .padding(32)
+        }
+        .frame(minWidth: 640, minHeight: 480)
+    }
+
+    @ViewBuilder
+    private func reviewSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title).font(.caption2).foregroundStyle(.tertiary).textCase(.uppercase).kerning(0.5)
+            VStack(spacing: 0) { content() }
+                .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+        }
+    }
+}
+
+private struct ReviewRow: View {
+    let label: String
+    let value: String
+    var secondary: String? = nil
+    var isTotal: Bool = false
+    var isClickable: Bool = false
+
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .fontWeight(isTotal ? .semibold : .regular)
+                .foregroundStyle(isTotal ? .primary : .secondary)
+            if let secondary {
+                Text(secondary).font(.caption).foregroundStyle(.tertiary)
+            }
+            Spacer()
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(isTotal ? .semibold : .medium)
+                .foregroundStyle(isTotal ? .primary : .secondary)
+                .monospacedDigit()
+            if isClickable {
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 10)
+    }
+}
+
+// MARK: - Project Detail View
+
+private struct ProjectDetailView: View {
+    @EnvironmentObject private var appState: AppState
+    let projectName: String
+    let onBack: () -> Void
+    let onFilterToday: (() -> Void)?
+
+    private var calendar: Calendar { .current }
+
+    // Every slice across all recorded days that carries this project label.
+    private var allSlices: [TrackedSession] {
+        appState.recordedDays.flatMap(\.sessions).filter { $0.projectName == projectName }
+    }
+
+    // Unique session count (cross-midnight sessions produce multiple slices with the same id).
+    private var uniqueSessionCount: Int { Set(allSlices.map(\.id)).count }
+
+    private var totalDuration: TimeInterval  { allSlices.reduce(0) { $0 + $1.segmentDuration } }
+    private var deskDuration: TimeInterval   { allSlices.filter(\.isFocusSession).reduce(0) { $0 + $1.segmentDuration } }
+    private var computerDuration: TimeInterval { allSlices.filter { !$0.isFocusSession }.reduce(0) { $0 + $1.segmentDuration } }
+
+    // Last 7 calendar days, newest first.
+    private var reviewDays: [Date] {
+        let today = calendar.startOfDay(for: Date())
+        return (0..<7).compactMap { calendar.date(byAdding: .day, value: -$0, to: today) }
+    }
+
+    private func dayDuration(for day: Date) -> TimeInterval {
+        appState.recordedDays
+            .first(where: { calendar.isDate($0.date, inSameDayAs: day) })?
+            .sessions
+            .filter { $0.projectName == projectName }
+            .reduce(0) { $0 + $1.segmentDuration } ?? 0
+    }
+
+    // Most recent sessions for this project (last 14 days, up to 15, deduped by id).
+    // Cross-midnight slices are merged so the row shows the full project session duration.
+    private var recentSessions: [TrackedSession] {
+        guard let cutoff = calendar.date(byAdding: .day, value: -14, to: calendar.startOfDay(for: Date())) else {
+            return []
+        }
+        let grouped = Dictionary(grouping: allSlices.filter { $0.endedAt >= cutoff }, by: \.id)
+        return grouped.values
+            .compactMap(mergedSession)
+            .sorted { $0.endedAt > $1.endedAt }
+            .prefix(15)
+            .map { $0 }
+    }
+
+    private func mergedSession(from slices: [TrackedSession]) -> TrackedSession? {
+        let sorted = slices.sorted { $0.startedAt < $1.startedAt }
+        guard let first = sorted.first else { return nil }
+        let latest = sorted.max { $0.endedAt < $1.endedAt } ?? first
+        return TrackedSession(
+            id: first.id,
+            startedAt: sorted.map(\.startedAt).min() ?? first.startedAt,
+            endedAt: sorted.map(\.endedAt).max() ?? first.endedAt,
+            segments: sorted.flatMap(\.segments).sorted { $0.startTime < $1.startTime },
+            title: latest.title ?? first.title,
+            mode: latest.mode ?? first.mode,
+            targetDuration: latest.targetDuration ?? first.targetDuration,
+            projectName: projectName
+        )
+    }
+
+    private static let weekdayFormatter: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "EEE MMM d"; return f
+    }()
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter(); f.timeStyle = .short; f.dateStyle = .none; return f
+    }()
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 28) {
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 5) {
+                            Image(systemName: "chevron.left").font(.subheadline)
+                            Text("Back").font(.subheadline).fontWeight(.medium)
+                        }
+                        .foregroundStyle(.primary)
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    if let onFilterToday {
+                        Button(action: onFilterToday) {
+                            Text("Filter Today")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 12).padding(.vertical, 7)
+                                .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.10)))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                Text(projectName).font(.title2).fontWeight(.semibold)
+
+                // Overview stats
+                detailSection("Overview") {
+                    ReviewRow(label: "Total Time",  value: DurationTextFormatter.string(from: totalDuration), isTotal: true)
+                    if deskDuration > 0     { ReviewRow(label: "Desk",     value: DurationTextFormatter.string(from: deskDuration)) }
+                    if computerDuration > 0 { ReviewRow(label: "Computer", value: DurationTextFormatter.string(from: computerDuration)) }
+                    ReviewRow(label: "Sessions", value: "\(uniqueSessionCount)")
+                }
+
+                // Recent sessions
+                if !recentSessions.isEmpty {
+                    detailSection("Recent Sessions") {
+                        ForEach(recentSessions, id: \.id) { s in
+                            ProjectSessionRow(session: s, timeFormatter: Self.timeFormatter)
+                        }
+                    }
+                }
+
+                // Day-by-day (last 7 days)
+                detailSection("Last 7 Days") {
+                    ForEach(reviewDays, id: \.self) { day in
+                        let dur = dayDuration(for: day)
+                        ReviewRow(
+                            label: Self.weekdayFormatter.string(from: day),
+                            value: dur > 0 ? DurationTextFormatter.string(from: dur) : "—"
+                        )
+                    }
+                }
+            }
+            .padding(32)
+        }
+        .frame(minWidth: 640, minHeight: 480)
+    }
+
+    @ViewBuilder
+    private func detailSection<C: View>(_ title: String, @ViewBuilder content: () -> C) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title).font(.caption2).foregroundStyle(.tertiary).textCase(.uppercase).kerning(0.5)
+            VStack(spacing: 0) { content() }
+                .background(RoundedRectangle(cornerRadius: 8).fill(.secondary.opacity(0.08)))
+        }
+    }
+}
+
+// Compact session row used inside ProjectDetailView (no action buttons needed).
+private struct ProjectSessionRow: View {
+    let session: TrackedSession
+    let timeFormatter: DateFormatter
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(session.isFocusSession ? session.displayTitle : (session.appSummary.isEmpty ? "Computer Session" : session.appSummary))
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+                Text("\(timeFormatter.string(from: session.startedAt)) – \(timeFormatter.string(from: session.endedAt))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Text(DurationTextFormatter.string(from: session.segmentDuration))
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+        }
+        .padding(.horizontal, 14).padding(.vertical, 10)
     }
 }
 

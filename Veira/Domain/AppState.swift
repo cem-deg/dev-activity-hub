@@ -54,6 +54,12 @@ final class AppState: ObservableObject {
     // Focus/desk session state
     private var currentSessionMode: SessionMode = .appTracking
     private var currentFocusTitle: String? = nil
+    private var currentFocusTargetDuration: TimeInterval? = nil
+    private var currentSessionProjectName: String? = nil
+
+    // Set after a session ends normally so the dashboard can show a completion summary.
+    // Cleared when a new session starts or when the summary is dismissed.
+    @Published private(set) var lastCompletedSession: TrackedSession? = nil
 
     @Published private(set) var liveClockTick: Date = Date()
     private var displayTimer: Timer?
@@ -121,8 +127,14 @@ final class AppState: ObservableObject {
     /// Title of the currently in-progress focus session, or nil when idle / app-tracking.
     var activeFocusTitle: String? { currentFocusTitle }
 
+    /// Target duration for the currently in-progress desk session, or nil when none is set.
+    var activeFocusTargetDuration: TimeInterval? { currentFocusTargetDuration }
+
+    /// Project/label for the currently in-progress session, or nil when none is set.
+    var activeSessionProjectName: String? { currentSessionProjectName }
+
     /// Total elapsed duration of the current session including the active run interval.
-    /// Does not clip to today — used by the focus timer window to show total session time.
+    /// Does not clip to today — used by the desk timer view to show total session time.
     var currentTotalSessionDuration: TimeInterval {
         guard sessionState != .idle else { return 0 }
         let elapsed = activeRunStartedAt.map { max(0, liveClockTick.timeIntervalSince($0)) } ?? 0
@@ -327,7 +339,9 @@ final class AppState: ObservableObject {
                 endedAt: now,
                 segments: segmentBuilder.drainSegments(),
                 title: currentFocusTitle,
-                mode: currentSessionMode
+                mode: currentSessionMode,
+                targetDuration: currentFocusTargetDuration,
+                projectName: currentSessionProjectName
             )
 
             for (dayKey, slice) in splitSessionByDay(session) {
@@ -343,6 +357,8 @@ final class AppState: ObservableObject {
             currentSessionId = nil
             currentSessionMode = .appTracking
             currentFocusTitle = nil
+            currentFocusTargetDuration = nil
+            currentSessionProjectName = nil
         }
 
         // Write synchronously. saveFinal advances the generation counter (poisoning any
@@ -357,6 +373,9 @@ final class AppState: ObservableObject {
         guard sessionState == .idle else { return }
         currentSessionMode = .appTracking
         currentFocusTitle = nil
+        currentFocusTargetDuration = nil
+        currentSessionProjectName = nil
+        lastCompletedSession = nil
         cancelPauseReminder()
         let now = Date()
         sessionStartedAt = now
@@ -375,11 +394,15 @@ final class AppState: ObservableObject {
     // Does not start active app tracking or idle detection.
     // A synthetic segment with the focus sentinel bundle ID is opened in the segment builder
     // so that the existing autosave, midnight-split, and quit-finalization paths work unchanged.
-    func startFocusSession(title: String) {
+    func startFocusSession(title: String, targetDuration: TimeInterval? = nil, projectName: String? = nil) {
         guard sessionState == .idle else { return }
         let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
         currentFocusTitle = trimmed.isEmpty ? nil : trimmed
+        currentFocusTargetDuration = targetDuration
+        let trimmedProject = projectName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        currentSessionProjectName = (trimmedProject?.isEmpty == true) ? nil : trimmedProject
         currentSessionMode = .focus
+        lastCompletedSession = nil
         cancelPauseReminder()
         let now = Date()
         sessionStartedAt = now
@@ -487,9 +510,11 @@ final class AppState: ObservableObject {
         finalizeSession(endedAt: now)
         accumulatedSessionDuration = 0
         sessionState = .idle
-        // Reset focus state after finalizeSession has captured title/mode.
+        // Reset session state after finalizeSession has captured title/mode/target/project.
         currentSessionMode = .appTracking
         currentFocusTitle = nil
+        currentFocusTargetDuration = nil
+        currentSessionProjectName = nil
     }
 
     private func idlePause(lastActivityAt: Date) {
@@ -584,6 +609,12 @@ final class AppState: ObservableObject {
         autosaveTimer = nil
     }
 
+    // MARK: - Completion summary
+
+    func clearLastCompletedSession() {
+        lastCompletedSession = nil
+    }
+
     // MARK: - Session rename
 
     // Updates the title of all slices that share the given session id (cross-midnight sessions
@@ -597,6 +628,26 @@ final class AppState: ObservableObject {
                 guard workDays[i].sessions[j].title != trimmed else { continue }
                 workDays[i].sessions[j].title = trimmed
                 changed = true
+            }
+        }
+        guard changed else { return }
+        SessionStore.saveAsync(workDays)
+    }
+
+    // Assigns or clears the project/label on all slices sharing the given session id.
+    // Passing nil or an empty string removes the label.
+    func setSessionProject(id: UUID, projectName: String?) {
+        let value: String? = {
+            let t = projectName?.trimmingCharacters(in: .whitespacesAndNewlines)
+            return (t?.isEmpty == true) ? nil : t
+        }()
+        var changed = false
+        for i in workDays.indices {
+            for j in workDays[i].sessions.indices where workDays[i].sessions[j].id == id {
+                if workDays[i].sessions[j].projectName != value {
+                    workDays[i].sessions[j].projectName = value
+                    changed = true
+                }
             }
         }
         guard changed else { return }
@@ -649,7 +700,9 @@ final class AppState: ObservableObject {
                 endedAt: sliceEnd,
                 segments: sorted,
                 title: session.title,
-                mode: session.mode
+                mode: session.mode,
+                targetDuration: session.targetDuration,
+                projectName: session.projectName
             ))
         }.sorted { $0.date < $1.date }
     }
@@ -665,7 +718,9 @@ final class AppState: ObservableObject {
             endedAt: now,
             segments: segmentBuilder.snapshotSegments(at: now),
             title: currentFocusTitle,
-            mode: currentSessionMode
+            mode: currentSessionMode,
+            targetDuration: currentFocusTargetDuration,
+            projectName: currentSessionProjectName
         )
 
         var snapshot = workDays
@@ -693,8 +748,15 @@ final class AppState: ObservableObject {
             endedAt: endedAt,
             segments: segmentBuilder.drainSegments(),
             title: currentFocusTitle,
-            mode: currentSessionMode
+            mode: currentSessionMode,
+            targetDuration: currentFocusTargetDuration,
+            projectName: currentSessionProjectName
         )
+
+        // Expose the full, unsplit session for the completion summary. Persistence below
+        // may store per-day slices for cross-midnight sessions, but the summary should
+        // always show the complete session duration and goal status.
+        lastCompletedSession = session
 
         for (dayKey, slice) in splitSessionByDay(session) {
             if let idx = workDays.firstIndex(where: { $0.date == dayKey }) {

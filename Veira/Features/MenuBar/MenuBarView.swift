@@ -8,6 +8,13 @@ struct MenuBarView: View {
     // Desk title entry inline flow
     @State private var showDeskTitleEntry = false
     @State private var deskTitleText = ""
+    @State private var deskTargetMinutes: Int = 0   // 0 = no target
+    @State private var deskProjectText = ""
+
+    private static let targetOptions: [(label: String, minutes: Int)] = [
+        ("No target", 0), ("15 min", 15), ("25 min", 25), ("30 min", 30),
+        ("45 min", 45), ("1 hour", 60), ("90 min", 90), ("2 hours", 120),
+    ]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,14 +31,12 @@ struct MenuBarView: View {
         .frame(width: 260)
         .onChange(of: appState.sessionState) { _, newState in
             if newState != .idle {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             }
         }
         .onChange(of: appState.selectedStartMode) { _, newMode in
             if newMode != .focus {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             }
         }
     }
@@ -52,6 +57,12 @@ struct MenuBarView: View {
                    let title = appState.activeFocusTitle {
                     Text(title)
                         .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                }
+                if let project = appState.activeSessionProjectName, !project.isEmpty {
+                    Text(project)
+                        .font(.caption2)
                         .foregroundStyle(.tertiary)
                         .lineLimit(1)
                 }
@@ -190,8 +201,7 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Full-width button row so the tap target is always reliably hit.
             Button {
-                showDeskTitleEntry = false
-                deskTitleText = ""
+                resetDeskEntry()
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "chevron.left")
@@ -226,16 +236,52 @@ struct MenuBarView: View {
                 .padding(.horizontal, 14)
                 .onSubmit { confirmStartDesk() }
 
+            // Project / label (optional)
+            TextField("Project (optional)", text: $deskProjectText)
+                .textFieldStyle(.plain)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(RoundedRectangle(cornerRadius: 6).fill(.secondary.opacity(0.10)))
+                .padding(.horizontal, 14)
+                .padding(.top, 6)
+
+            // Target duration picker
+            HStack(spacing: 6) {
+                Text("Target")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Picker("", selection: $deskTargetMinutes) {
+                    ForEach(Self.targetOptions, id: \.minutes) { option in
+                        Text(option.label).tag(option.minutes)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .font(.caption)
+            }
+            .padding(.horizontal, 14)
+            .padding(.top, 6)
+            .padding(.bottom, 2)
+
             PanelButton("Start Desk Session") { confirmStartDesk() }
                 .padding(.top, 4)
         }
     }
 
     private func confirmStartDesk() {
-        appState.startFocusSession(title: deskTitleText)
+        let target: TimeInterval? = deskTargetMinutes > 0 ? Double(deskTargetMinutes) * 60 : nil
+        appState.startFocusSession(title: deskTitleText, targetDuration: target, projectName: deskProjectText)
         dashboardController.open(appState: appState, updaterService: updaterService)
+        resetDeskEntry()
+    }
+
+    private func resetDeskEntry() {
         showDeskTitleEntry = false
         deskTitleText = ""
+        deskTargetMinutes = 0
+        deskProjectText = ""
     }
 
     // MARK: - Actions
